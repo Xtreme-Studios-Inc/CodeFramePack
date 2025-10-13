@@ -1,0 +1,9 @@
+{
+  "dependencyConfig": {
+    "name": "sqlite3",
+    "libPath": "external/sqlite3",
+    "linkType": "dynamic",
+    "libs": ["sqlite3"]
+  },
+  "libraryOptions": {}
+}

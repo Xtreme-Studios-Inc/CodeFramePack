@@ -1,0 +1,9 @@
+{
+  "dependencyConfig": {
+    "name": "crow",
+    "libPath": "external/crow",
+    "linkType": "header-only",
+    "version": "1.2.1.2"
+  },
+  "libraryOptions": {}
+}

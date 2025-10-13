@@ -1,0 +1,16 @@
+{
+  "dependencyConfig": {
+    "name": "llama",
+    "libPath": "external/llama",
+    "linkType": "static",
+    "libs": [
+      "llama",
+      "ggml",
+      "ggml-base",
+      "ggml-cpu",
+      "mtmd",
+      "omp"
+    ]
+  },
+  "libraryOptions": {}
+}

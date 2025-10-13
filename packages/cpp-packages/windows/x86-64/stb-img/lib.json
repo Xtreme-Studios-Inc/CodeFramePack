@@ -1,0 +1,8 @@
+{
+  "dependencyConfig": {
+    "name": "stb-img",
+    "libPath": "external/stb-img",
+    "linkType": "header_only"
+  },
+  "libraryOptions": {}
+}

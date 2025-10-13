@@ -1,0 +1,10 @@
+{
+  "dependencyConfig": {
+    "name": "glfw",
+    "libPath": "external/glfw",
+    "linkType": "static",
+    "libs": ["glfw3"],
+    "version": "3.5"
+  },
+  "libraryOptions": {}
+}
