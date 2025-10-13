@@ -30,7 +30,7 @@ GROUPED_REPOS=(
 REPOS=(
   # Utility Framework
   "https://github.com/XsAndre-L/poco.git"
-  
+
   # Compression / Archiving
   "https://github.com/XsAndre-L/Zipios.git"
   "https://github.com/XsAndre-L/zlib.git"
@@ -131,24 +131,6 @@ REPOS=(
   # "https://github.com/owner/another-lib.git"
   # "git@github.com:owner/private-lib.git"
 )
-
-# for repo in "${REPOS[@]}"; do
-#   name="$(basename "$repo" .git)"   # repo folder name
-#   echo "→ $name"
-
-#   if [[ -d "$name/.git" ]]; then
-#     echo "   exists → pulling latest…"
-#     git -C "$name" pull --ff-only
-#   else
-#     echo "   cloning into $SCRIPT_DIR/$name"
-#     # git clone --depth 1 "$repo" "$name"
-#     # If you need submodules:
-#     git clone --recurse-submodules --depth 1 "$repo" "$name"
-#     # git -C "$name" submodule update --init --recursive
-#   fi
-# done
-
-# echo "✅ Done."
 
 # === Function to clone or pull ===
 clone_or_pull() {
