@@ -128,6 +128,10 @@ REPOS=(
   "https://github.com/XsAndre-L/googletest.git"
   "https://github.com/XsAndre-L/benchmark.git"
 
+  # Scripting Languages
+  "https://github.com/XsAndre-L/quickjs.git"
+  "https://github.com/XsAndre-L/lua.git"
+
   # "https://github.com/owner/another-lib.git"
   # "git@github.com:owner/private-lib.git"
 )

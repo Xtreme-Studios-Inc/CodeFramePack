@@ -1,1 +1,5 @@
 */
+
+# # But keep the lua folder
+# !lua/
+# !lua/**
