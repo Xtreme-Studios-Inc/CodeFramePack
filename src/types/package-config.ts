@@ -1,4 +1,4 @@
-export const OUTPUT_DIR = "../../packages_TEST/cpp-packages";
+export const OUTPUT_DIR = "../../build/generated-packages/cpp-packages";
 
 // For the script to work user has to define:
 // export let builds: BuildArchitectures = {[CUSTOM CONFIG GOES HERE]};
@@ -11,6 +11,16 @@ export interface BuildConfig {
   installStep: Cmd;
 }
 export interface BuildArchitectures {
+  readonly type: "architectures";
   windows_x86_64: BuildConfig;
   windows_aarch64: BuildConfig;
+  linux_x86_64: BuildConfig;
+  linux_aarch64: BuildConfig;
 }
+
+export interface HeaderList {
+  readonly type: "headers";
+  libs: Record<string, string[]>;
+}
+
+export type BuildType = BuildArchitectures | HeaderList;

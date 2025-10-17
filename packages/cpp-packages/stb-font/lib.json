@@ -1,0 +1,9 @@
+{
+  "dependencyConfig": {
+    "name": "stb-font",
+    "libPath": "external/stb-font",
+    "linkType": "header_only",
+    "version": "1.26.0"
+  },
+  "libraryOptions": {}
+}

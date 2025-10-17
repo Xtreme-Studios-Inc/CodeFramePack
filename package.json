@@ -1,10 +1,14 @@
 {
   "name": "codeframepackages",
-  "module": "src/cf-pm.ts",
+  "module": "src/codeframe.ts",
   "type": "module",
   "private": true,
   "scripts": {
-    "cf": "bun src/cf-pm.ts"
+    "cf": "bun src/codeframe.ts",
+    "setup": "bun cf setup",
+    "build-all": "bun cf build-all",
+    "clean-all": "bun cf clean-all",
+    "clean-tools": "bun cf clean-tools"
   },
   "devDependencies": {
     "@types/bun": "latest"

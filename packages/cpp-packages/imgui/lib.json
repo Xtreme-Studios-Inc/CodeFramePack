@@ -1,0 +1,49 @@
+{
+    "dependencyConfig": {
+        "name": "imgui",
+        "libPath": "external/imgui",
+        "options": {
+            "backends": ["glfw", "opengl"]
+        },
+        "version": "1.92.4"
+    },
+    "libraryOptions": {
+        "backends": [
+            {
+                "option": "glfw",
+                "from": "options/backends/GLFW",
+                "to": "include/backends"
+            },
+            {
+                "option": "vulkan",
+                "from": "options/backends/Vulkan",
+                "to": "include/backends"
+            },
+            {
+                "option": "webgpu",
+                "from": "options/backends/WebGPU",
+                "to": "include/backends"
+            },
+            {
+                "option": "dx11",
+                "from": "options/backends/DX11",
+                "to": "include/backends"
+            },
+            {
+                "option": "dx12",
+                "from": "options/backends/DX12",
+                "to": "include/backends"
+            },
+            {
+                "option": "opengl",
+                "from": "options/backends/OpenGL3",
+                "to": "include/backends"
+            },
+            {
+                "option": "sdl",
+                "from": "options/backends/SDL3",
+                "to": "include/backends"
+            }
+        ]
+    }
+}

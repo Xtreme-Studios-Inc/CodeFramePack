@@ -1,0 +1,9 @@
+{
+  "dependencyConfig": {
+    "name": "zlib",
+    "libPath": "external/zlib",
+    "linkType": "static",
+    "libs": ["zlib"]
+  },
+  "libraryOptions": {}
+}

@@ -1,7 +1,6 @@
+build
 out/
-
 packages_TEST/
-
 node_modules/
 
 *.zip

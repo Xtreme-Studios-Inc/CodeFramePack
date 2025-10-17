@@ -1,11 +1,13 @@
+import unzipper from "unzipper";
+
+import { cp, rename, rm } from "node:fs/promises";
 import { mkdirSync, existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { createHash } from "node:crypto";
 import { argv } from "node:process";
-import { cp, rename, rm } from "node:fs/promises";
-import unzipper from "unzipper";
-import { cleanPackages, processPackages } from "./packages";
-import type { Toolchain } from "types/tool-config";
+
+import { runPackageActions } from "./packages";
+import type { Toolchain } from "./types/tool-config";
 import { BOLD, MAGENTA, RESET } from "./types/theme";
 
 const toolchains: Toolchain[] = [
@@ -14,11 +16,16 @@ const toolchains: Toolchain[] = [
     downloadUrl:
       "https://github.com/mstorsjo/llvm-mingw/releases/download/20251007/llvm-mingw-20251007-ucrt-x86_64.zip",
   },
+  {
+    name: "dependencies",
+    downloadUrl:
+      "https://github.com/Xtreme-Studios-Inc/CodeFrameDocs/releases/download/cf.clang.v23.01/cpp.zip",
+  },
 ];
 
-const BASE_DIR = resolve(process.cwd(), "toolchains");
-const DEST_DIR = BASE_DIR;
-const EXTRACT_DIR = DEST_DIR; // unzip into same dir
+const TOOLCHAINS_DIR = resolve(process.cwd(), "toolchains");
+// const DEST_DIR = BASE_DIR;
+const TOOLCHAIN_EXTRACT_DIR = TOOLCHAINS_DIR; // unzip into same dir
 
 async function download(url: string, outPath: string) {
   if (existsSync(outPath)) {
@@ -101,16 +108,17 @@ async function extractZip(
 }
 
 async function setup() {
-  if (!existsSync(DEST_DIR)) mkdirSync(DEST_DIR, { recursive: true });
+  if (!existsSync(TOOLCHAINS_DIR))
+    mkdirSync(TOOLCHAINS_DIR, { recursive: true });
 
   for (const toolchain of toolchains) {
-    const ZIP_PATH = join(DEST_DIR, `${toolchain.name}.zip`);
-    const DEST_PATH = join(DEST_DIR, toolchain.name);
+    const ZIP_PATH = join(TOOLCHAINS_DIR, `${toolchain.name}.zip`);
+    const DEST_PATH = join(TOOLCHAINS_DIR, toolchain.name);
     await download(toolchain.downloadUrl, ZIP_PATH);
-    await extractZip(ZIP_PATH, EXTRACT_DIR, DEST_PATH);
+    await extractZip(ZIP_PATH, TOOLCHAIN_EXTRACT_DIR, DEST_PATH);
 
     console.log("🛣️  add to PATH:");
-    console.log(`   ${EXTRACT_DIR}\\${toolchain.name}/bin`);
+    console.log(`   ${TOOLCHAIN_EXTRACT_DIR}\\${toolchain.name}/bin`);
   }
 
   console.log("🎉 Done");
@@ -122,10 +130,10 @@ async function main(cmd: string) {
       await setup();
       break;
     case "build-all":
-      await processPackages("./lib-sources", "cf-auto.ts");
+      await runPackageActions("build", "./lib-sources");
       break;
     case "clean-all":
-      await cleanPackages("./lib-sources", "cf-auto.ts");
+      await runPackageActions("clean", "./lib-sources");
       break;
     case "clean-tools":
       console.log("Would Clean Tools");

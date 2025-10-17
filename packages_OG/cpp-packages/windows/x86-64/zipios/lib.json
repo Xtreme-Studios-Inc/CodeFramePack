@@ -1,0 +1,9 @@
+{
+  "dependencyConfig": {
+    "name": "zipios",
+    "libPath": "external/zipios",
+    "linkType": "static",
+    "libs": ["zipios"]
+  },
+  "libraryOptions": {}
+}

@@ -2,6 +2,29 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug CodeFrame (Bun)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "bun",
+      "runtimeArgs": ["--inspect-brk", "${workspaceFolder}/src/codeframe.ts"],
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "smartStep": true,
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "resolveSourceMapLocations": ["**", "!**/node_modules/**"],
+      "sourceMapPathOverrides": {
+        "file:///*": "/*",
+        "file:///C:/*": "C:/*",
+        "file:///D:/*": "D:/*",
+        "file:///c:/*": "c:/*",
+        "file:///d:/*": "d:/*"
+      },
+      "outFiles": ["${workspaceFolder}/**/*.ts"],
+      "trace": true
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppvsdbg",
       "request": "launch",

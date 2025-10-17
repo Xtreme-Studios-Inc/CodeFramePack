@@ -1,0 +1,9 @@
+{
+  "dependencyConfig": {
+    "name": "stb-audio",
+    "libPath": "external/stb-audio",
+    "linkType": "header_only",
+    "version": "1.22.0"
+  },
+  "libraryOptions": {}
+}
