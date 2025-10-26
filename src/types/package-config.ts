@@ -24,3 +24,12 @@ export interface HeaderList {
 }
 
 export type BuildType = BuildArchitectures | HeaderList;
+
+// Library Types
+export interface LibGroups {
+  [key: string]: string[];
+}
+export interface Repositories {
+  groups: LibGroups;
+  other: string[];
+}

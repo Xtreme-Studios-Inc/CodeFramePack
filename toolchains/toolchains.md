@@ -1,4 +1,4 @@
-[Main Release](https://github.com/mstorsjo/llvm-mingw/releases)
+[llvm-mingw Release](https://github.com/mstorsjo/llvm-mingw/releases)
 
 ## Other
 
@@ -42,6 +42,8 @@ docker export raylib-sysroot -o linux22.04-sysroot.tar
 1. Move `Sysroot/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2`
    to
    `Sysroot/lib64/ld-linux-x86-64.so.2`
+
+2. Rename `Sysroot/usr/lib/aarch64-linux-gnu/libm.so` to libm.so.7 and Rename `Sysroot/usr/lib/aarch64-linux-gnu/libm.so.6` to libm.so
 
 ```cmake
 # Target Linux

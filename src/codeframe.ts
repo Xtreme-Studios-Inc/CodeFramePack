@@ -9,6 +9,8 @@ import { argv } from "node:process";
 import { runPackageActions } from "./packages";
 import type { Toolchain } from "./types/tool-config";
 import { BOLD, MAGENTA, RESET } from "./types/theme";
+import { config } from "./config/config";
+import { cloneRepos } from "./commands/clone-all";
 
 const toolchains: Toolchain[] = [
   {
@@ -129,6 +131,9 @@ async function main(cmd: string) {
     case "setup":
       await setup();
       break;
+    case "clone-all":
+      await cloneRepos(config.repositories);
+      break;
     case "build-all":
       await runPackageActions("build", "./lib-sources");
       break;
@@ -142,6 +147,7 @@ async function main(cmd: string) {
       console.log(
         `${BOLD}${MAGENTA}------- Help -------${RESET}\n`,
         `${BOLD}${MAGENTA}setup:${RESET} downloads all dependencies\n`,
+        `${BOLD}${MAGENTA}clone-all:${RESET} clone all library sources\n`,
         `${BOLD}${MAGENTA}build-all:${RESET} builds all packages\n`,
         `${BOLD}${MAGENTA}clean-all:${RESET} cleans all all package build directories\n`,
         `${BOLD}${MAGENTA}clean-tools:${RESET} cleans out dependencies\n`
