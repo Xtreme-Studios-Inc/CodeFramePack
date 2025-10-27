@@ -1,0 +1,26 @@
+# Target Windows x86_64
+set(CMAKE_SYSTEM_NAME Windows)
+set(CMAKE_SYSTEM_PROCESSOR aarch64)
+set(CMAKE_CROSSCOMPILING OFF)
+
+set(CMAKE_C_COMPILER_TARGET   aarch64-w64-windows-gnu)
+set(CMAKE_CXX_COMPILER_TARGET aarch64-w64-windows-gnu)
+
+# set(EXTRA_PY_ARGS )
+
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
+# set(CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH TRUE)
+# set(CMAKE_FIND_USE_CMAKE_SYSTEM_PATH TRUE)
+
+
+
+
+# add once in the toolchain
+set(COMMON_FLAGS "-Wno-everything -Wno-error -ftemplate-backtrace-limit=1 -D_LIBCPP_DISABLE_DEPRECATION_WARNINGS")
+set(CMAKE_C_FLAGS_INIT   "${CMAKE_C_FLAGS_INIT} ${COMMON_FLAGS}")
+set(CMAKE_CXX_FLAGS_INIT "${CMAKE_CXX_FLAGS_INIT} ${COMMON_FLAGS}")
+
+add_compile_options(-Wno-everything -Wno-error -ftemplate-backtrace-limit=1)
+add_compile_definitions(_LIBCPP_DISABLE_DEPRECATION_WARNINGS)

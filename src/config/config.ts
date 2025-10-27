@@ -131,4 +131,16 @@ export const config: CFPackConfig = {
       "https://github.com/XsAndre-L/lua.git",
     ],
   },
+  toolchains: [
+    {
+      name: "llvm-mingw",
+      downloadUrl:
+        "https://github.com/mstorsjo/llvm-mingw/releases/download/20251007/llvm-mingw-20251007-ucrt-x86_64.zip",
+    },
+    {
+      name: "dependencies",
+      downloadUrl:
+        "https://github.com/Xtreme-Studios-Inc/CodeFrameDocs/releases/download/cf.clang.v23.01/cpp.zip",
+    },
+  ],
 };
