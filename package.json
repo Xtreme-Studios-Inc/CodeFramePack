@@ -1,10 +1,10 @@
 {
   "name": "codeframepackages",
-  "module": "src/codeframe.ts",
+  "module": "src/cf-pack.ts",
   "type": "module",
   "private": true,
   "scripts": {
-    "cf": "bun src/codeframe.ts",
+    "cf": "bun src/cf-pack.ts",
     "setup": "bun cf setup",
     "build-all": "bun cf build-all",
     "clean-all": "bun cf clean-all",

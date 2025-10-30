@@ -1,0 +1,121 @@
+# # syntax=docker/dockerfile:1.6
+# FROM ubuntu:24.04
+# SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+# ENV DEBIAN_FRONTEND=noninteractive
+
+# # 1) Enable arm64; 2) KEEP default amd64 deb822 sources; 3) Add arm64 ports deb822
+# RUN dpkg --add-architecture arm64 && \
+#     echo "--- Adding arm64 ports source (keep default amd64 sources) ---" && \
+#     cat >/etc/apt/sources.list.d/ubuntu-ports-arm64.sources <<'SRC'
+# Types: deb
+# URIs: http://ports.ubuntu.com/ubuntu-ports
+# Suites: noble noble-updates noble-backports noble-security
+# Components: main restricted universe multiverse
+# Architectures: arm64
+# Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+# SRC
+
+# # Install host toolchain + target (arm64) sysroot dev packages
+# RUN apt-get update && \
+#     apt-get install -y --no-install-recommends \
+#       # host tools (amd64)
+#       build-essential cmake ninja-build pkg-config \
+#       # target sysroot (arm64)
+#       libc6-dev:arm64 \
+#       libgtk-3-dev:arm64 libwebkit2gtk-4.1-dev:arm64 \
+#       libvulkan-dev:arm64 libsdl2-dev:arm64 libglfw3-dev:arm64 \
+#       libwayland-dev:arm64 wayland-protocols:arm64 \
+#       libxkbcommon-dev:arm64 libx11-dev:arm64 libxrandr-dev:arm64 \
+#       libxi-dev:arm64 libxcursor-dev:arm64 libxinerama-dev:arm64 \
+#       libxxf86vm-dev:arm64 libgl1-mesa-dev:arm64 libglvnd-dev:arm64 \
+#       libssl-dev:arm64 libcurl4-openssl-dev:arm64 zlib1g-dev:arm64 \
+#       libasound2-dev:arm64 libpulse-dev:arm64 libfreetype-dev:arm64 \
+#       libfontconfig-dev:arm64 libpng-dev:arm64 libjpeg-dev:arm64 && \
+#     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# CMD ["/bin/bash"]
+
+
+
+
+# syntax=docker/dockerfile:1.6
+FROM ubuntu:24.04
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 1) Enable arm64 and remove the default wide-open sources
+RUN dpkg --add-architecture arm64 \
+ && rm -f /etc/apt/sources.list \
+ && rm -f /etc/apt/sources.list.d/*.list \
+ && rm -f /etc/apt/sources.list.d/ubuntu.sources
+
+# 2) amd64 -> archive.ubuntu.com (Architectures: amd64)
+RUN cat >/etc/apt/sources.list.d/ubuntu-amd64.sources <<'SRC1'
+Types: deb
+URIs: http://archive.ubuntu.com/ubuntu
+Suites: noble noble-updates noble-backports noble-security
+Components: main restricted universe multiverse
+Architectures: amd64
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+SRC1
+
+# 3) arm64 -> ports.ubuntu.com (Architectures: arm64)
+RUN cat >/etc/apt/sources.list.d/ubuntu-ports-arm64.sources <<'SRC2'
+Types: deb
+URIs: http://ports.ubuntu.com/ubuntu-ports
+Suites: noble noble-updates noble-backports noble-security
+Components: main restricted universe multiverse
+Architectures: arm64
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+SRC2
+
+# Add LLVM 20 repo (amd64 + arm64) — dearmored key
+RUN apt-get update && apt-get install -y --no-install-recommends wget gnupg ca-certificates lsb-release && \
+    install -d -m 0755 /etc/apt/keyrings && \
+    wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
+      | gpg --dearmor | tee /etc/apt/keyrings/llvm-snapshot.gpg >/dev/null && \
+    chmod 0644 /etc/apt/keyrings/llvm-snapshot.gpg && \
+    rel="$(lsb_release -sc)" && \
+    printf "Types: deb\nURIs: https://apt.llvm.org/%s/\nSuites: llvm-toolchain-%s-20\nComponents: main\nArchitectures: amd64 arm64\nSigned-By: /etc/apt/keyrings/llvm-snapshot.gpg\n" "$rel" "$rel" \
+      | tee /etc/apt/sources.list.d/llvm20.sources >/dev/null && \
+    apt-get update
+
+# Update and install both-arch dev libraries
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      build-essential pkg-config \
+      libc6-dev:arm64 \
+      lld-20 \
+      libclang-rt-20-dev:arm64 \
+      libc++-20-dev:arm64 \
+      libc++abi-20-dev:arm64 \
+      libunwind-20-dev:arm64 \
+      zlib1g-dev:arm64 \
+      libasound2-dev:arm64 \
+      libx11-dev:arm64 \
+      libxrandr-dev:arm64 \
+      libxi-dev:arm64 \
+      libxcursor-dev:arm64 \
+      libxinerama-dev:arm64 \
+      libxxf86vm-dev:arm64 \
+      libgl-dev:arm64 \
+      libglvnd-dev:arm64 \
+      libwebkit2gtk-4.1-dev:arm64 \
+      libgtk-3-dev:arm64 \
+      libglib2.0-dev:arm64 \
+      libpango1.0-dev:arm64 \
+      libcairo2-dev:arm64 \
+      libgdk-pixbuf-2.0-dev:arm64 \
+      libsoup-3.0-dev:arm64 \
+      libharfbuzz-dev:arm64 \
+      libfreetype6-dev:arm64 \
+      libpng-dev:arm64 \
+      libjpeg-dev:arm64 \
+      libwebp-dev:arm64 \
+      libdbus-1-dev:arm64 \
+      libatk-bridge2.0-dev:arm64 \
+      libatspi2.0-dev:arm64 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+CMD ["bash"]

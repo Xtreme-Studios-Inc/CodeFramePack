@@ -12,8 +12,8 @@ import { pathToFileURL } from "url";
 import { spawn } from "bun";
 import { platform } from "process";
 
-import type { BuildType, Cmd } from "./types/package-config";
-import { BOLD, DARK_GREEN, GREEN, MAGENTA, RESET } from "./types/theme";
+import type { BuildType, Cmd } from "../types/package-config";
+import { BOLD, DARK_GREEN, GREEN, MAGENTA, RESET } from "../types/theme";
 
 let CWD: string;
 
@@ -57,7 +57,7 @@ export async function run(
   }
 }
 
-// explicit order, fully typed:
+// Explicit Order, fully typed:
 const buildOrder = [
   "windows_x86_64",
   "windows_aarch64",
@@ -107,7 +107,7 @@ export async function build(build: BuildType) {
 
         try {
           if (st.isDirectory()) {
-            // Copy entire directory (recursive)
+            // Copy directory (recursive)
             // Ensure parent exists (cpSync will create children)
             if (!existsSync(destPath)) mkdirSync(destPath, { recursive: true });
             cpSync(srcPath, destPath, { recursive: true });
@@ -115,21 +115,16 @@ export async function build(build: BuildType) {
           } else {
             // Copy single file
             const destParent = dirname(destPath);
+
             if (!existsSync(destParent))
               mkdirSync(destParent, { recursive: true });
+
             copyFileSync(srcPath, destPath);
             console.log(`Copied ${srcPath} → ${destPath}`);
           }
         } catch (err) {
           console.error(`❌ Copy failed for ${srcPath} → ${destPath}:`, err);
         }
-
-        // if (existsSync(srcPath)) {
-        //   copyFileSync(srcPath, destPath);
-        //   console.log(`Copied ${file} → ${destPath}`);
-        // } else {
-        //   console.warn(`⚠️ Source file missing: ${srcPath}`);
-        // }
       }
     }
   }
@@ -158,10 +153,10 @@ export async function runPackageAction(
 async function getModule(dirPath: string, file: string): Promise<any | null> {
   if (!statSync(dirPath).isDirectory()) return null;
 
-  const tsPath = join(dirPath, ".codeframe", file); // e.g. "build.ts"
+  const tsPath = join(dirPath, ".codeframe", file);
   if (!existsSync(tsPath)) return null;
 
-  return await import(pathToFileURL(tsPath).href); // <-- key fix
+  return await import(pathToFileURL(tsPath).href);
 }
 
 // Multi Actions
@@ -180,15 +175,42 @@ export async function runPackageActions(action: string, baseDir: string) {
       break;
   }
 
-  for (const sub of readdirSync(baseDir)) {
-    const libDir = join(baseDir, sub);
-    const mod = await getModule(libDir, "package.ts");
+  for (const subDir of readdirSync(baseDir)) {
+    const libDir = join(baseDir, subDir);
+    const lib = await getModule(libDir, "package.ts");
 
-    if (!mod) continue;
+    if (!lib) {
+      // 1. Check if 'subDir' is a directory
+      let subStat;
+      try {
+        subStat = statSync(libDir);
+      } catch (e) {
+        continue;
+      }
 
-    console.log(`${BOLD}${MAGENTA}${label} ${sub}${RESET}\n`);
+      if (!subStat.isDirectory()) continue;
 
-    const build = mod.build?.(libDir);
+      // Correction: subDir is just the name, we must use the full path (libDir)
+      // for readdirSync to correctly find the contents of the subdirectory.
+      for (const subSubDir of readdirSync(libDir)) {
+        const nestedModDir = join(libDir, subSubDir); // Use libDir, not subDir, to form the path
+        const nestedMod = await getModule(nestedModDir, "package.ts");
+
+        if (!nestedMod) continue;
+
+        console.log(
+          `${BOLD}${MAGENTA}${label} ${subDir}/${subSubDir}${RESET}\n`
+        );
+
+        const build = nestedMod.build?.(nestedModDir);
+        await runPackageAction(action, nestedModDir, build);
+      }
+      continue;
+    }
+
+    console.log(`${BOLD}${MAGENTA}${label} ${subDir}${RESET}\n`);
+
+    const build = lib.build?.(libDir);
     await runPackageAction(action, libDir, build);
   }
 }
