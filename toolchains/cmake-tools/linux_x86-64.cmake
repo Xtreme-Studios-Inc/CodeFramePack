@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Sysroot (path to extracted Linux rootfs)
-set(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux/linux24-amd64")
+set(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux24-amd64")
 
 # Make our custom modules discoverable
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
@@ -57,8 +57,10 @@ set(CLANG_RT_BUILTINS  "${CLANG_RT_DIR}/libclang_rt.builtins-x86_64.a")
 # libc++/abi/unwind libraries
 set(LIBCXX_DIR         "${CMAKE_SYSROOT}/usr/lib/x86_64-linux-gnu")
 set(LIBCXX_A           "${LIBCXX_DIR}/libc++.a")
+set(LIBC_A           "${LIBCXX_DIR}/libc.so")
 set(LIBCXXABI_A        "${LIBCXX_DIR}/libc++abi.so")
 set(LIBUNWIND_A        "${LIBCXX_DIR}/libunwind.a")
+set(LIBM               "${LIBCXX_DIR}/libm.so")
 set(BUILTINS_A         "${CMAKE_SYSROOT}/usr/lib/llvm-20/lib/clang/20/lib/linux/libclang_rt.builtins-x86_64.a")
 
 # Additional libc++ library search dirs
@@ -72,7 +74,7 @@ set(LIBCXX_LIB_DIR_2   "${CMAKE_SYSROOT}/usr/lib/llvm-20/lib")
 set(_linker_setup_flags_list
   -fuse-ld=lld
   -nodefaultlibs
-  -Wl,--dynamic-linker=${CMAKE_SYSROOT}/usr/lib64/ld-linux-x86-64.so.2
+  -Wl,--dynamic-linker=${LIBCXX_DIR}/ld-linux-x86-64.so.2
   -L${LIBCXX_DIR}
   -L${LIBCXX_LIB_DIR_2}
   -L${LIBCXX_LIB_DIR_1}
@@ -87,9 +89,10 @@ string(JOIN " " _LINKER_SETUP_FLAGS ${_linker_setup_flags_list})
 
 set(_linker_core_libs_list
   ${BUILTINS_A}
-  -Wl,--push-state,--whole-archive ${LIBCXX_A} -Wl,--pop-state
+  -Wl,--push-state,--whole-archive ${LIBCXX_A} ${LIBC_A} -Wl,--pop-state
   ${LIBCXXABI_A}
   ${LIBUNWIND_A}
+  ${LIBM}
   -lpthread -ldl -lm -lc
 )
 string(JOIN " " _LINKER_CORE_LIBS ${_linker_core_libs_list})

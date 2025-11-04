@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Path to your extracted Linux rootfs
-set(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux/linux24-aarch64")
+set(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux24-aarch64")
 
 # Make our custom modules discoverable
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
@@ -58,6 +58,7 @@ set(CLANG_RT_BUILTINS  "${CLANG_RT_DIR}/libclang_rt.builtins-aarch64.a")
 # libc++/abi/unwind libraries
 set(LIBCXX_DIR         "${CMAKE_SYSROOT}/usr/lib/aarch64-linux-gnu")
 set(LIBCXX_A           "${LIBCXX_DIR}/libc++.a")
+set(LIBC_A           "${LIBCXX_DIR}/libc.so")
 set(LIBCXXABI_A        "${LIBCXX_DIR}/libc++abi.so")
 set(LIBUNWIND_A        "${LIBCXX_DIR}/libunwind.a")
 set(LIBM               "${LIBCXX_DIR}/libm.so")
@@ -76,7 +77,7 @@ set(_linker_setup_flags_list
   -fuse-ld=lld
   -nodefaultlibs
   -nostartfiles
-  -Wl,--dynamic-linker=${CMAKE_SYSROOT}/usr/${_triplet}/ld-linux-aarch64.so.1
+  -Wl,--dynamic-linker=${LIBCXX_DIR}/ld-linux-aarch64.so.1
   -L${LIBCXX_DIR}
   -L${LIBCXX_LIB_DIR_2}
   -L${LIBCXX_LIB_DIR_1}
@@ -92,9 +93,10 @@ string(JOIN " " _LINKER_SETUP_FLAGS ${_linker_setup_flags_list})
 # --- Linker Core Libraries (aarch64) ---
 set(_linker_core_libs_list
   ${BUILTINS_A}
-  -Wl,--push-state,--whole-archive ${LIBCXX_A} -Wl,--pop-state
+  -Wl,--push-state,--whole-archive ${LIBCXX_A} ${LIBC_A} -Wl,--pop-state
   ${LIBCXXABI_A}
   ${LIBUNWIND_A}
+  ${LIBM}
   -lpthread
   -ldl
   -lm

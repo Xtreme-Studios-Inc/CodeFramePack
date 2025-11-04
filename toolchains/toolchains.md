@@ -11,3 +11,5 @@ To create the linux toolchains we run the following command that builds the dock
 ```bash
 ./toolchains/cmake-tools/linux-sysroot.sh
 ```
+
+Renaming of some files in the sysroot is still needed

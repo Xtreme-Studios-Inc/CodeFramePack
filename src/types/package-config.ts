@@ -1,4 +1,4 @@
-export const OUTPUT_DIR = "../../build/generated-packages/cpp-packages";
+export const OUTPUT_DIR = "../../../build/generated-packages/cpp-packages";
 
 // For the script to work user has to define:
 // export let builds: BuildArchitectures = {[CUSTOM CONFIG GOES HERE]};

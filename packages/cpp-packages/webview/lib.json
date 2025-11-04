@@ -1,0 +1,9 @@
+{
+  "dependencyConfig": {
+    "name": "webview",
+    "libPath": "external/webview",
+    "linkType": "static",
+    "libs": ["webview"]
+  },
+  "libraryOptions": {}
+}

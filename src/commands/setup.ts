@@ -100,8 +100,8 @@ export async function setup(toolchains: Toolchain[]) {
     await download(toolchain.downloadUrl, ZIP_PATH);
     await extractZip(ZIP_PATH, TOOLCHAIN_EXTRACT_DIR, DEST_PATH);
 
-    console.log("🛣️  add to PATH:");
-    console.log(`   ${TOOLCHAIN_EXTRACT_DIR}\\${toolchain.name}/bin`);
+    console.log("🟢 Completed:");
+    console.log(`   ${TOOLCHAIN_EXTRACT_DIR}\\${toolchain.name}`);
   }
 
   console.log("🎉 Done");
