@@ -3,7 +3,7 @@
     "name": "openssl",
     "libPath": "external/openssl",
     "linkType": "static",
-    "libs": ["openssl"]
+    "libs": ["ssl", "crypto"]
   },
   "libraryOptions": {}
 }
