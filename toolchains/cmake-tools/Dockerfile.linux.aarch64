@@ -70,15 +70,15 @@ Architectures: arm64
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 SRC2
 
-# Add LLVM 20 repo (amd64 + arm64) — dearmored key
+# Add LLVM 21 repo (amd64 + arm64) — dearmored key
 RUN apt-get update && apt-get install -y --no-install-recommends wget gnupg ca-certificates lsb-release && \
     install -d -m 0755 /etc/apt/keyrings && \
     wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
       | gpg --dearmor | tee /etc/apt/keyrings/llvm-snapshot.gpg >/dev/null && \
     chmod 0644 /etc/apt/keyrings/llvm-snapshot.gpg && \
     rel="$(lsb_release -sc)" && \
-    printf "Types: deb\nURIs: https://apt.llvm.org/%s/\nSuites: llvm-toolchain-%s-20\nComponents: main\nArchitectures: amd64 arm64\nSigned-By: /etc/apt/keyrings/llvm-snapshot.gpg\n" "$rel" "$rel" \
-      | tee /etc/apt/sources.list.d/llvm20.sources >/dev/null && \
+    printf "Types: deb\nURIs: https://apt.llvm.org/%s/\nSuites: llvm-toolchain-%s-21\nComponents: main\nArchitectures: amd64 arm64\nSigned-By: /etc/apt/keyrings/llvm-snapshot.gpg\n" "$rel" "$rel" \
+      | tee /etc/apt/sources.list.d/llvm21.sources >/dev/null && \
     apt-get update
 
 # Update and install both-arch dev libraries
@@ -86,11 +86,11 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       build-essential pkg-config \
       libc6-dev:arm64 \
-      lld-20 \
-      libclang-rt-20-dev:arm64 \
-      libc++-20-dev:arm64 \
-      libc++abi-20-dev:arm64 \
-      libunwind-20-dev:arm64 \
+      lld-21 \
+      libclang-rt-21-dev:arm64 \
+      libc++-21-dev:arm64 \
+      libc++abi-21-dev:arm64 \
+      libunwind-21-dev:arm64 \
       zlib1g-dev:arm64 \
       libasound2-dev:arm64 \
       libx11-dev:arm64 \

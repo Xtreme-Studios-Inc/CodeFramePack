@@ -1,26 +1,79 @@
+# FROM ubuntu:24.04
+
+# SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+# ENV DEBIAN_FRONTEND=noninteractive
+
+# # Add LLVM 20 apt repo
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#       wget gnupg ca-certificates lsb-release \
+#   && echo "deb http://apt.llvm.org/$(lsb_release -sc)/ llvm-toolchain-$(lsb_release -sc)-20 main" \
+#       > /etc/apt/sources.list.d/llvm20.list \
+#   && wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
+#       | tee /etc/apt/trusted.gpg.d/llvm.asc >/dev/null \
+#   && apt-get update
+
+# # Update and install both-arch dev libraries
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#   build-essential pkg-config \
+#   libc6-dev:amd64 \
+#   lld-20 \
+#   libclang-rt-20-dev:amd64 \
+#   libc++-20-dev:amd64 \
+#   libc++abi-20-dev:amd64 \
+#   libunwind-20-dev:amd64 \
+#   zlib1g-dev:amd64 \
+#   libasound2-dev:amd64 \
+#   libx11-dev:amd64 \
+#   libxrandr-dev:amd64 \
+#   libxi-dev:amd64 \
+#   libxcursor-dev:amd64 \
+#   libxinerama-dev:amd64 \
+#   libxxf86vm-dev:amd64 \
+#   libgl-dev:amd64 \
+#   libglvnd-dev:amd64 \
+#   \
+#   libwebkit2gtk-4.1-dev:amd64 \
+#   libgtk-3-dev:amd64 \
+#   libglib2.0-dev:amd64 \
+#   libpango1.0-dev:amd64 \
+#   libcairo2-dev:amd64 \
+#   libgdk-pixbuf-2.0-dev:amd64 \
+#   libsoup-3.0-dev:amd64 \
+#   libharfbuzz-dev:amd64 \
+#   libfreetype6-dev:amd64 \
+#   libpng-dev:amd64 \
+#   libjpeg-dev:amd64 \
+#   libwebp-dev:amd64 \
+#   libdbus-1-dev:amd64 \
+#   libatk-bridge2.0-dev:amd64 \
+#   libatspi2.0-dev:amd64 \
+# && apt-get clean && rm -rf /var/lib/apt/lists/*
+    
+# CMD ["bash"]
+
 FROM ubuntu:24.04
 
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Add LLVM 20 apt repo
+# Add LLVM 21 apt repo
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      wget gnupg ca-certificates lsb-release \
-  && echo "deb http://apt.llvm.org/$(lsb_release -sc)/ llvm-toolchain-$(lsb_release -sc)-20 main" \
-      > /etc/apt/sources.list.d/llvm20.list \
-  && wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
-      | tee /etc/apt/trusted.gpg.d/llvm.asc >/dev/null \
-  && apt-get update
+    wget gnupg ca-certificates lsb-release \
+ && echo "deb http://apt.llvm.org/$(lsb_release -sc)/ llvm-toolchain-$(lsb_release -sc)-21 main" \
+    > /etc/apt/sources.list.d/llvm21.list \
+ && wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key \
+    | tee /etc/apt/trusted.gpg.d/llvm.asc >/dev/null \
+ && apt-get update
 
 # Update and install both-arch dev libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential pkg-config \
   libc6-dev:amd64 \
-  lld-20 \
-  libclang-rt-20-dev:amd64 \
-  libc++-20-dev:amd64 \
-  libc++abi-20-dev:amd64 \
-  libunwind-20-dev:amd64 \
+  lld-21 \
+  libclang-rt-21-dev:amd64 \
+  libc++-21-dev:amd64 \
+  libc++abi-21-dev:amd64 \
+  libunwind-21-dev:amd64 \
   zlib1g-dev:amd64 \
   libasound2-dev:amd64 \
   libx11-dev:amd64 \
