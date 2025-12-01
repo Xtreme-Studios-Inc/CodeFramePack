@@ -1,73 +1,34 @@
 import unzipper from "unzipper";
 
-import { cp, rename, rm } from "node:fs/promises";
+// import { cp, rename, rm } from "node:fs/promises";
 import { mkdirSync, existsSync } from "node:fs";
-import { join, resolve } from "node:path";
-import { createHash } from "node:crypto";
-import type { Toolchain } from "../types/tool-config";
+import path, { join, resolve } from "node:path";
+import { download } from "codeframe-bridge/network";
+import { moveDir } from "codeframe-bridge/filesystem";
+// import { createHash } from "node:crypto";
+import type { Toolchain, Resource } from "../types/tool-config";
+import type { CFPackConfig } from "../types/types";
 
-const TOOLCHAINS_DIR = resolve(process.cwd(), "toolchains");
+const RESOURCE_DIR = resolve(process.cwd(), "toolchains/resources");
+const TOOLCHAIN_DIR = resolve(process.cwd(), "toolchains");
 // const DEST_DIR = BASE_DIR;
-const TOOLCHAIN_EXTRACT_DIR = TOOLCHAINS_DIR; // unzip into same dir
-
-async function download(url: string, outPath: string) {
-  if (existsSync(outPath)) {
-    console.log(`✔ Already Downloaded: ${outPath}`);
-    return;
-  }
-
-  console.log(`⬇️  Downloading\n${url}\n→ ${outPath}`);
-  const res = await fetch(url);
-  if (!res.ok || !res.body)
-    throw new Error(`HTTP ${res.status} ${res.statusText}`);
-
-  // stream to disk and compute sha256 on the fly
-  const writer = Bun.file(outPath).writer();
-  const hash = createHash("sha256");
-  const reader = res.body.getReader();
-
-  let received = 0;
-  const total = Number(res.headers.get("content-length") ?? 0);
-
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    received += value.byteLength;
-    hash.update(value);
-    await writer.write(value);
-    if (total) {
-      const pct = Math.floor((received / total) * 100);
-      if (pct % 5 === 0) process.stdout.write(`\r   ${pct}%`);
-    }
-  }
-  await writer.end();
-  const digest = hash.digest("hex");
-  process.stdout.write("\r");
-  console.log(`✅ Saved ${received} bytes`);
-  return digest;
-}
-
-async function moveDir(src: string, dest: string) {
-  try {
-    await rename(src, dest);
-  } catch {
-    // fallback: copy then delete (works across volumes / locked rename)
-    await cp(src, dest, { recursive: true, force: true });
-    await rm(src, { recursive: true, force: true });
-  }
-}
+const RESOURCE_EXTRACT_DIR = RESOURCE_DIR; // unzip into same dir
+const TOOLCHAIN_EXTRACT_DIR = TOOLCHAIN_DIR; // unzip into same dir
 
 export async function extractedDirName(
   zipPath: string
 ): Promise<string | undefined> {
-  const z = await unzipper.Open.file(zipPath);
+  const zip = await unzipper.Open.file(zipPath);
   const roots = new Set<string>();
 
-  for (const f of z.files) {
-    const clean = f.path.replace(/^[/\\]+/, "");
+  for (const file of zip.files) {
+    const clean = file.path.replace(/^[/\\]+/, "");
     if (!clean) continue;
-    roots.add(clean.split(/[/\\]/)[0]);
-    if (roots.size > 1) return ""; // multiple different roots
+
+    const rootPart = clean.split(/[/\\]/)[0]!;
+    roots.add(rootPart);
+
+    if (roots.size > 1) return undefined; // multiple different roots
   }
 
   return roots.size === 1 ? [...roots][0] : "";
@@ -90,19 +51,71 @@ async function extractZip(
   await moveDir(EXTRACT_PATH, destDir);
 }
 
-export async function setup(toolchains: Toolchain[]) {
-  if (!existsSync(TOOLCHAINS_DIR))
-    mkdirSync(TOOLCHAINS_DIR, { recursive: true });
+async function extract(filePath: string, destDir: string) {
+  // 1. Clean previous failed attempts (Crucial)
+  await Bun.spawn(["rm", "-rf", destDir]).exited;
+  await Bun.spawn(["mkdir", "-p", destDir]).exited;
 
+  console.log(`📦 Extracting ${path.basename(filePath)}...`);
+
+  const cwd = path.dirname(filePath);
+  const fileName = path.basename(filePath);
+  const relativeDest = path.relative(cwd, destDir); // Ensures no "D:" drive issues
+
+  const cmd = ["tar", "-xf", fileName, "-C", relativeDest];
+
+  const proc = Bun.spawn(cmd, {
+    cwd: cwd,
+    stdout: "inherit",
+    stderr: "inherit",
+    // 👇 THIS IS THE FIX. It forces MinGW tar to use Windows symlinks.
+    env: {
+      ...process.env,
+      MSYS: "winsymlinks:nativestrict",
+    },
+  });
+
+  const exitCode = await proc.exited;
+  if (exitCode !== 0) {
+    throw new Error(`Extraction failed for ${filePath}`);
+  }
+}
+
+async function getResources(resources: Resource[]) {
+  for (const resource of resources) {
+    const extension = resource.downloadUrl.endsWith(".tar.xz")
+      ? ".tar.xz"
+      : ".zip";
+
+    const ZIP_PATH = join(RESOURCE_DIR, `${resource.name}${extension}`);
+    const DEST_PATH = join(RESOURCE_DIR, `${resource.name}`);
+    await download(resource.downloadUrl, ZIP_PATH);
+
+    if (extension == ".tar.xz") await extract(ZIP_PATH, DEST_PATH);
+    else await extractZip(ZIP_PATH, RESOURCE_EXTRACT_DIR, DEST_PATH);
+
+    console.log("🟢 Completed:");
+    console.log(`   ${RESOURCE_EXTRACT_DIR}\\${resource.name}`);
+  }
+}
+
+async function getToolchains(toolchains: Toolchain[]) {
   for (const toolchain of toolchains) {
-    const ZIP_PATH = join(TOOLCHAINS_DIR, `${toolchain.name}.zip`);
-    const DEST_PATH = join(TOOLCHAINS_DIR, toolchain.name);
+    const ZIP_PATH = join(RESOURCE_DIR, `${toolchain.name}.zip`);
+    const DEST_PATH = join(RESOURCE_DIR, toolchain.name);
     await download(toolchain.downloadUrl, ZIP_PATH);
     await extractZip(ZIP_PATH, TOOLCHAIN_EXTRACT_DIR, DEST_PATH);
 
     console.log("🟢 Completed:");
     console.log(`   ${TOOLCHAIN_EXTRACT_DIR}\\${toolchain.name}`);
   }
+}
+
+export async function setup(config: CFPackConfig) {
+  if (!existsSync(RESOURCE_DIR)) mkdirSync(RESOURCE_DIR, { recursive: true });
+
+  await getResources(config.resources);
+  // getToolchains(config.toolchains);
 
   console.log("🎉 Done");
 }

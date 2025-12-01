@@ -10,7 +10,7 @@ import { rm } from "node:fs/promises";
 async function main(cmd: string) {
   switch (cmd) {
     case "setup":
-      await setup(config.toolchains);
+      await setup(config);
       break;
     case "clone-all":
       await cloneRepos(config.repositories);

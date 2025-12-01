@@ -17,6 +17,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "codeframe-bridge": "^0.1.22",
     "unzipper": "^0.12.3"
   }
 }

@@ -136,12 +136,29 @@ export const config: CFPackConfig = {
       "https://github.com/XsAndre-L/FFmpeg.git",
     ],
   },
-  toolchains: [
+  resources: [
     {
-      name: "llvm-mingw",
+      name: "windows.x86_64",
       downloadUrl:
-        "https://github.com/mstorsjo/llvm-mingw/releases/download/20251007/llvm-mingw-20251007-ucrt-x86_64.zip",
+        "https://github.com/mstorsjo/llvm-mingw/releases/download/20251118/llvm-mingw-20251118-ucrt-x86_64.zip",
     },
+    {
+      name: "windows.aarch64",
+      downloadUrl:
+        "https://github.com/mstorsjo/llvm-mingw/releases/download/20251118/llvm-mingw-20251118-ucrt-aarch64.zip",
+    },
+    {
+      name: "linux.x86_64",
+      downloadUrl:
+        "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/LLVM-21.1.6-Linux-X64.tar.xz",
+    },
+    {
+      name: "linux.aarch64",
+      downloadUrl:
+        "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/LLVM-21.1.6-Linux-ARM64.tar.xz",
+    },
+  ],
+  toolchains: [
     {
       name: "dependencies",
       downloadUrl:
