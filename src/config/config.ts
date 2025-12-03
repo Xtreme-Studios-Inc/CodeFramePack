@@ -1,4 +1,160 @@
+import type {
+  Resource,
+  Toolchain,
+  ToolchainScaffoldConfig,
+} from "../types/tool-config";
 import type { CFPackConfig } from "../types/types";
+
+const toolchains: Record<string, Toolchain> = {
+  "linux.x86_64.sysroot": {
+    dockerFile: "Dockerfile.linux.x86_64",
+    triplet: "x86_64-linux-gnu",
+  },
+  "linux.aarch64.sysroot": {
+    dockerFile: "Dockerfile.linux.aarch64",
+    triplet: "aarch64-linux-gnu",
+  },
+};
+
+const LINUX_BINARY_EXCLUSIONS: string[] = [
+  "flang-21",
+  "bbc",
+  "fir-opt",
+  "fir-lsp-server",
+  "tco",
+  "mlir-*",
+  "bugpoint",
+  "diagtool",
+  "llvm-c-test",
+  "llvm-extract",
+  "llvm-bcanalyzer",
+  "llvm-mca",
+  "llvm-cfi-verify",
+  "llvm-rtdyld",
+  "pp-trace",
+  "llc",
+  "opt",
+  "llvm-mc",
+  "llvm-lto",
+  "llvm-lto2",
+  "llvm-reduce",
+  "clang-move",
+  "clang-change-namespace",
+  "clang-include-fixer",
+  "clang-repl",
+  "llvm-stress",
+  "clang-tblgen",
+  "llvm-tblgen",
+  "tblgen-to-irdl",
+  "tblgen-lsp-server",
+  "llvm-diff",
+  "f18-parse-demo",
+  "llvm-dwarfdump",
+  "llvm-dwarfutil",
+  "llvm-debuginfo-analyzer",
+  "llvm-debuginfod",
+  "llvm-pdbutil",
+  "llvm-cxxdump",
+  "llvm-readtapi",
+  "llvm-readobj",
+  "lldb-instr",
+  "lldb-dap",
+  "lldb-server",
+  "clang-check",
+  "clang-extdef-mapping",
+  "clang-refactor",
+  "clang-query",
+  "clang-doc",
+  "clang-reorder-fields",
+  "clang-include-cleaner",
+  "find-all-symbols",
+  "modularize",
+  "c-index-test",
+  "clang-apply-replacements",
+  "llvm-ml",
+  "llvm-gsymutil",
+  "llvm-split",
+  "llvm-dwp",
+  "lli",
+  "llvm-jitlink",
+  "llvm-xray",
+  "sancov",
+  "llvm-profgen",
+  "llvm-exegesis",
+  "llvm-bolt",
+  "llvm-bolt-heatmap",
+  "llvm-bolt-binary-analysis",
+  "clang-linker-wrapper",
+  "clang-nvlink-wrapper",
+  "clang-sycl-linker",
+];
+
+const toolchainScafoldConfig: Record<string, ToolchainScaffoldConfig> = {
+  "windows.x86_64": {
+    rules: [{ from: "windows.x86_64", to: "" }],
+  },
+  "windows.aarch64": {
+    rules: [{ from: "windows.aarch64", to: "" }],
+  },
+  "linux.x86_64": {
+    rules: [
+      {
+        from: "linux.x86_64/bin",
+        to: "bin",
+        exclude: LINUX_BINARY_EXCLUSIONS,
+        rename: {
+          "clang-21": "clang",
+        },
+      },
+      {
+        from: "linux.x86_64/lib/clang",
+        to: "lib/clang",
+      },
+      {
+        from: "linux.x86_64.sysroot",
+        to: "",
+      },
+    ],
+  },
+  "linux.aarch64": {
+    rules: [
+      {
+        from: "linux.aarch64/bin",
+        to: "bin",
+        exclude: LINUX_BINARY_EXCLUSIONS,
+        rename: {
+          "clang-21": "clang",
+        },
+      },
+      {
+        from: "linux.aarch64/lib/clang",
+        to: "lib/clang",
+      },
+      {
+        from: "linux.aarch64.sysroot",
+        to: "",
+      },
+    ],
+  },
+};
+const resources: Record<string, Resource> = {
+  "windows.x86_64": {
+    downloadUrl:
+      "https://github.com/mstorsjo/llvm-mingw/releases/download/20251118/llvm-mingw-20251118-ucrt-x86_64.zip",
+  },
+  "windows.aarch64": {
+    downloadUrl:
+      "https://github.com/mstorsjo/llvm-mingw/releases/download/20251118/llvm-mingw-20251118-ucrt-aarch64.zip",
+  },
+  "linux.x86_64": {
+    downloadUrl:
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/LLVM-21.1.6-Linux-X64.tar.xz",
+  },
+  "linux.aarch64": {
+    downloadUrl:
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/LLVM-21.1.6-Linux-ARM64.tar.xz",
+  },
+};
 
 export const config: CFPackConfig = {
   repositories: {
@@ -129,50 +285,24 @@ export const config: CFPackConfig = {
       ],
     },
     other: [
-      // Utility Framework
       "https://github.com/XsAndre-L/poco.git",
-
-      // Multimedia / Codecs
       "https://github.com/XsAndre-L/FFmpeg.git",
     ],
   },
-  resources: [
-    {
-      name: "windows.x86_64",
-      downloadUrl:
-        "https://github.com/mstorsjo/llvm-mingw/releases/download/20251118/llvm-mingw-20251118-ucrt-x86_64.zip",
-    },
-    {
-      name: "windows.aarch64",
-      downloadUrl:
-        "https://github.com/mstorsjo/llvm-mingw/releases/download/20251118/llvm-mingw-20251118-ucrt-aarch64.zip",
-    },
-    {
-      name: "linux.x86_64",
-      downloadUrl:
-        "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/LLVM-21.1.6-Linux-X64.tar.xz",
-    },
-    {
-      name: "linux.aarch64",
-      downloadUrl:
-        "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.6/LLVM-21.1.6-Linux-ARM64.tar.xz",
-    },
-  ],
-  toolchains: [
-    {
-      name: "dependencies",
-      downloadUrl:
-        "https://github.com/Xtreme-Studios-Inc/CodeFrameDocs/releases/download/cf.clang.v23.01/cpp.zip",
-    },
-    {
-      name: "linux24-aarch64",
-      downloadUrl:
-        "https://github.com/Xtreme-Studios-Inc/CodeFramePack/releases/download/toolchains/linux24-aarch64.zip",
-    },
-    {
-      name: "linux24-amd64",
-      downloadUrl:
-        "https://github.com/Xtreme-Studios-Inc/CodeFramePack/releases/download/toolchains/linux24-amd64.zip",
-    },
-  ],
+  resources,
+  toolchains,
+  toolchainScafoldConfig,
 };
+
+// toolchains: [
+//   {
+//     name: "linux24-aarch64-sysroot",
+//     downloadUrl:
+//       "https://github.com/Xtreme-Studios-Inc/CodeFramePack/releases/download/toolchains/linux24-aarch64.zip",
+//   },
+//   {
+//     name: "linux24-x86_64-sysroot",
+//     downloadUrl:
+//       "https://github.com/Xtreme-Studios-Inc/CodeFramePack/releases/download/toolchains/linux24-amd64.zip",
+//   },
+// ],

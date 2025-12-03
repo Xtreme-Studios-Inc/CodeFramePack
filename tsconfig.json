@@ -28,5 +28,6 @@
 
     "sourceMap": true,
     "inlineSources": true
-  }
+  },
+  "exclude": ["lib-sources"]
 }

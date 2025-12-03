@@ -6,6 +6,7 @@ import { config } from "./config/config";
 import { cloneRepos } from "./commands/clone-all";
 import { setup } from "./commands/setup";
 import { rm } from "node:fs/promises";
+import { removeToolchains } from "./commands/toolchains/toolchains";
 
 async function main(cmd: string) {
   switch (cmd) {
@@ -23,7 +24,9 @@ async function main(cmd: string) {
       await rm("build/generated-packages", { recursive: true, force: true });
       break;
     case "clean-tools":
-      console.log("Would Clean Tools");
+      // await rm("toolchains/resources", { recursive: true, force: true });
+      await removeToolchains(config);
+      console.log("🗑️  Tools Deleted");
       break;
     case "help":
       console.log(

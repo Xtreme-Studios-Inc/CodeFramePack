@@ -54,6 +54,9 @@
     "**/.git/subtree-cache/**": true,
     "**/.hg/store/**": true
   },
+  "search.exclude": {
+    "/lib-sources/**": true
+  },
   "C_Cpp_Runner.useAddressSanitizer": false,
   "C_Cpp_Runner.useUndefinedSanitizer": false,
   "C_Cpp_Runner.useLeakSanitizer": false,
