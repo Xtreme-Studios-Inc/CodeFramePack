@@ -2,7 +2,7 @@ export interface Resource {
   downloadUrl: string;
 }
 
-export interface Toolchain {
+export interface DockerResource {
   dockerFile: string;
   triplet: string;
 }
@@ -35,8 +35,15 @@ export interface ScaffoldRule {
   flatten?: boolean;
 
   rename?: Record<string, string>;
+
+  /**
+   * Optional: Overwrite specific files with new string content.
+   * Key: The relative path of the file (inside the 'to' folder).
+   * Value: The raw string content to write instead of the source file.
+   */
+  substitutions?: Record<string, string>;
 }
 
-export interface ToolchainScaffoldConfig {
+export interface SysrootScaffoldConfig {
   rules: ScaffoldRule[];
 }

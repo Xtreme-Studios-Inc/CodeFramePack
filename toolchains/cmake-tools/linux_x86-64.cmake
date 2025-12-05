@@ -1,5 +1,5 @@
 # ------------------------------------------------------------
-# Toolchain: Linux x86_64 (cross from host)
+# DockerResource: Linux x86_64 (cross from host)
 # ------------------------------------------------------------
 
 # Target platform

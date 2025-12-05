@@ -1,5 +1,5 @@
 # ------------------------------------------------------------
-# Toolchain: Linux aarch64 (cross from host)
+# DockerResource: Linux aarch64 (cross from host)
 # ------------------------------------------------------------
 
 # Target platform

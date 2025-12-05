@@ -1,13 +1,13 @@
 import type { Repositories } from "../types/package-config.ts";
 import type {
-  Toolchain,
+  DockerResource,
   Resource,
-  ToolchainScaffoldConfig,
+  SysrootScaffoldConfig,
 } from "./tool-config.ts";
 
 export interface CFPackConfig {
   repositories: Repositories;
   resources: Record<string, Resource>;
-  toolchains: Record<string, Toolchain>;
-  toolchainScafoldConfig: Record<string, ToolchainScaffoldConfig>;
+  dockerResources: Record<string, DockerResource>;
+  sysrootScaffoldConfig: Record<string, SysrootScaffoldConfig>;
 }

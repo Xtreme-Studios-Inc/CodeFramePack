@@ -3,10 +3,10 @@ import type { CFPackConfig } from "../../types/types";
 import path, { resolve } from "node:path";
 import { mkdir, rm, exists, cp } from "node:fs/promises";
 import { BUILD_DIR, RESOURCE_DIR, TOOLCHAIN_DIR } from "./toolchain-constants";
-import type { ToolchainScaffoldConfig } from "../../types/tool-config";
+import type { SysrootScaffoldConfig } from "../../types/tool-config";
 
 async function outputDependencies(
-  scafoldConfigs: Record<string, ToolchainScaffoldConfig>
+  scafoldConfigs: Record<string, SysrootScaffoldConfig>
 ) {
   const outDir = resolve(BUILD_DIR, "dependencies/cpp");
   if (!exists(outDir)) await mkdir(outDir);
@@ -15,14 +15,15 @@ async function outputDependencies(
     async ([key, scafold]) => {
       const scafoldedToolchainDir = resolve(TOOLCHAIN_DIR, key);
       if (!(await exists(scafoldedToolchainDir))) {
-        console.error("No Toolchain Resources available for: " + key);
+        console.error("No DockerResource Resources available for: " + key);
         return;
       }
 
       const [os, arch] = key.split(".");
       if (!(os && arch)) {
         console.error(
-          "Invalid Toolchain Identifier, expected (OS.ARCH) but got: " + key
+          "Invalid DockerResource Identifier, expected (OS.ARCH) but got: " +
+            key
         );
         return;
       }
@@ -47,7 +48,7 @@ async function outputDependencies(
 
 export async function organiseToolchains(config: CFPackConfig) {
   await removeToolchains(config);
-  const scafoldConfigs = config.toolchainScafoldConfig;
+  const scafoldConfigs = config.sysrootScaffoldConfig;
 
   for (const [key, scafold] of Object.entries(scafoldConfigs)) {
     const scafoldedToolchainDir = resolve(TOOLCHAIN_DIR, key);
@@ -83,13 +84,6 @@ export async function organiseToolchains(config: CFPackConfig) {
             continue;
           }
 
-          // // 4. Resolve Destination Path
-          // // If flatten is true, we use only the filename (basename).
-          // // If false, we preserve the folder structure found by the glob.
-          // const destPath = rule.flatten
-          //   ? resolve(destRoot, path.basename(file))
-          //   : resolve(destRoot, file);
-
           // 4. Resolve Destination Path
           const originalFilename = path.basename(file);
           const parsed = path.parse(originalFilename); // { name: "clang-21", ext: ".exe", base: "clang-21.exe" }
@@ -108,9 +102,17 @@ export async function organiseToolchains(config: CFPackConfig) {
             }
           }
 
-          const destPath = rule.flatten
-            ? resolve(destRoot, targetFilename)
-            : resolve(destRoot, path.dirname(file), targetFilename);
+          // const destPath = rule.flatten
+          //   ? resolve(destRoot, targetFilename)
+          //   : resolve(destRoot, path.dirname(file), targetFilename);
+
+          // Calculate the specific sub-path relative to destRoot
+          // (e.g., "lib/x86_64-linux-gnu/libc.so")
+          const relativeDestPath = rule.flatten
+            ? targetFilename
+            : path.join(path.dirname(file), targetFilename);
+
+          const destPath = resolve(destRoot, relativeDestPath);
 
           // 5. Perform the Copy
           const sourcePath = resolve(sourceRoot, file);
@@ -118,18 +120,33 @@ export async function organiseToolchains(config: CFPackConfig) {
           // Ensure the specific destination folder exists
           await mkdir(path.dirname(destPath), { recursive: true });
 
-          // Use Bun's native high-performance file writer
-          await Bun.write(destPath, Bun.file(sourcePath));
+          // // Use Bun's native high-performance file writer
+          // await Bun.write(destPath, Bun.file(sourcePath));
+
+          // --- SUBSTITUTION LOGIC START ---
+
+          // Normalize slashes to forward slashes for consistent Key lookup
+          // (Windows uses backslashes, but your config keys use forward slashes)
+          const substitutionKey = relativeDestPath.replace(/\\/g, "/");
+
+          if (rule.substitutions && rule.substitutions[substitutionKey]) {
+            // Case A: Write the substituted content (fix for libc.so)
+            // We write the string directly instead of copying the file
+            await Bun.write(destPath, rule.substitutions[substitutionKey]);
+          } else {
+            // Case B: Standard File Copy
+            await Bun.write(destPath, Bun.file(sourcePath));
+          }
         }
       }
     }
   }
 
-  await outputDependencies(config.toolchainScafoldConfig);
+  await outputDependencies(config.sysrootScaffoldConfig);
 }
 
 export async function removeToolchains(config: CFPackConfig) {
-  const scafoldConfigs = config.toolchainScafoldConfig;
+  const scafoldConfigs = config.sysrootScaffoldConfig;
 
   for (const [key, scafold] of Object.entries(scafoldConfigs)) {
     const toolchainPath = resolve(TOOLCHAIN_DIR, key);

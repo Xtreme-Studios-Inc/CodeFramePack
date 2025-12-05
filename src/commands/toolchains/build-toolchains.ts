@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 
-import type { Toolchain } from "../../types/tool-config";
+import type { DockerResource } from "../../types/tool-config";
 import path from "node:path";
 import { mkdir, readdir, rename, rm } from "node:fs/promises";
 import { RESOURCE_DIR } from "./toolchain-constants";
@@ -19,7 +19,9 @@ function run(command: string) {
   });
 }
 
-export async function buildToolchains(toolchains: Record<string, Toolchain>) {
+export async function buildToolchains(
+  toolchains: Record<string, DockerResource>
+) {
   for (const [name, toolchain] of Object.entries(toolchains)) {
     // Map JSON properties to script variables
     const image = `builder-${name}`;

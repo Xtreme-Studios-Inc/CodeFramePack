@@ -100,7 +100,7 @@ async function getResources(resources: Record<string, Resource>) {
   }
 }
 
-// async function getToolchains(toolchains: Toolchain[]) {
+// async function getToolchains(toolchains: DockerResource[]) {
 //   for (const toolchain of toolchains) {
 //     const ZIP_PATH = join(RESOURCE_DIR, `${toolchain.name}.zip`);
 //     const DEST_PATH = join(RESOURCE_DIR, toolchain.name);
