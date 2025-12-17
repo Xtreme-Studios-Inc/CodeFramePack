@@ -1,15 +1,13 @@
 import { spawn } from "node:child_process";
 
-import type { DockerResource } from "../../types/tool-config";
+import type { DockerResource } from "../../core/types/tool-config";
 import path from "node:path";
 import { mkdir, readdir, rename, rm } from "node:fs/promises";
 import { RESOURCE_DIR } from "./toolchain-constants";
 
-// 1. Helper to run commands with LIVE output
+// run command with LIVE output
 function run(command: string) {
   return new Promise<void>((resolve, reject) => {
-    // shell: true allows us to write the command as a single string
-    // stdio: "inherit" passes the output directly to your terminal
     const process = spawn(command, { shell: true, stdio: "inherit" });
 
     process.on("close", (code) => {
@@ -57,6 +55,24 @@ export async function buildToolchains(
       await run(
         `docker cp "${name}":/usr/lib/"${triplet}" "${resourceDir}/usr/lib/"`
       );
+      // TODO
+
+      // GCC Resources to the lib folder
+      if (name == "linux.x86_64.sysroot")
+        await run(
+          `docker cp "${name}":/usr/lib/gcc "${resourceDir}/usr/lib/gcc/"`
+        );
+      else if (name == "linux.aarch64.sysroot")
+        await run(
+          `docker cp "${name}":/usr/lib/gcc-cross "${resourceDir}/usr/lib/gcc/"`
+        );
+
+      // if(name == "linux.x86_64.sysroot")
+      //   await run(`docker cp "${name}":/usr/lib/"gcc" "${resourceDir}/usr/lib/"`);
+      //   else if (name == "linux.aarch64.sysroot")
+      // await run(
+      //   `docker cp "${name}":/usr/lib/"gcc-cross" "${resourceDir}/usr/lib/"`
+      // );
 
       const v1Dest = path.join(resourceDir, "usr/include/c++/v1");
       await mkdir(v1Dest, { recursive: true });

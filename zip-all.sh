@@ -1,6 +1,42 @@
+# #!/bin/bash
+
+# # Loop through all sub directories in packages zipping the libs in their relative out folder
+
+# OUT_DIR="build/ship"
+# mkdir -p "$OUT_DIR"
+
+# for pkgLanguage in packages/*; do
+#     [ -d "$pkgLanguage" ] || continue  # skip if not a directory
+#     echo "📦 $pkgLanguage"
+
+#     for pkg in "$pkgLanguage"/*; do
+#         [ -d "$pkg" ] || continue
+#         echo "          └─ $pkg"
+
+#         # compute relative path inside 'packages/'
+#         rel_path="${pkg#packages/}"             # remove leading 'packages/'
+#         dest_dir="$OUT_DIR/$(dirname "$rel_path")"  # same structure under 'out/'
+#         mkdir -p "$dest_dir"
+
+#         # zip name = folder name (basename)
+#         zip_name="$(basename "$pkg").zip"
+#         dest_zip="$dest_dir/$zip_name"
+
+#         echo "             → Zipping to: $dest_zip"
+            
+#         7z a "$dest_zip" "$pkg"
+#     done
+# done
+
+# echo "✅ All packages zipped into '$OUT_DIR/'"
+
+
+
+
+
 #!/bin/bash
 
-# Loop through all sub directories in packages zipping the libs in their relative out folder
+# Loop through all sub directories in packages, compressing libs into their relative out folder
 
 OUT_DIR="build/ship"
 mkdir -p "$OUT_DIR"
@@ -18,17 +54,32 @@ for pkgLanguage in packages/*; do
         dest_dir="$OUT_DIR/$(dirname "$rel_path")"  # same structure under 'out/'
         mkdir -p "$dest_dir"
 
-        # zip name = folder name (basename)
-        zip_name="$(basename "$pkg").zip"
-        dest_zip="$dest_dir/$zip_name"
+        # archive name = folder name (basename)
+        folder_name="$(basename "$pkg")"
+        archive_name="${folder_name}.tar.zst"
+        dest_archive="$dest_dir/$archive_name"
 
-        echo "             → Zipping to: $dest_zip"
+        echo "             → Compressing to: $dest_archive"
             
-        7z a "$dest_zip" "$pkg"
+        # -C changes directory to the parent of the package so the archive 
+        # doesn't store the full 'packages/language/...' path structure, just the folder itself.
+        # --zstd uses zstandard compression
+        tar --zstd -cf "$dest_archive" -C "$pkgLanguage" "$folder_name"
     done
 done
 
-echo "✅ All packages zipped into '$OUT_DIR/'"
+echo "✅ All packages compressed into '$OUT_DIR/'"
+
+
+
+
+
+
+
+
+
+
+
 
 # #!/bin/bash
 

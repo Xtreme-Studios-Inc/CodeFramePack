@@ -44,6 +44,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget gnupg ca-c
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       build-essential pkg-config \
+      gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
       libc6-dev:arm64 \
       lld-21 \
       libclang-rt-21-dev:arm64 \

@@ -1,4 +1,4 @@
-import type { Repositories } from "../types/package-config.ts";
+import type { Repositories } from "./package-config.ts";
 import type {
   DockerResource,
   Resource,

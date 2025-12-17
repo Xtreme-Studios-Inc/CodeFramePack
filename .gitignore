@@ -4,3 +4,4 @@ packages_TEST/
 node_modules/
 
 *.zip
+*.tar.zst

@@ -1,12 +1,13 @@
 import { argv } from "node:process";
 
 import { runPackageActions } from "./commands/packages";
-import { BOLD, MAGENTA, RESET } from "./types/theme";
+import { BOLD, MAGENTA, RESET } from "./core/types/theme";
 import { config } from "./config/config";
 import { cloneRepos } from "./commands/clone-all";
 import { setup } from "./commands/setup";
 import { rm } from "node:fs/promises";
-import { removeToolchains } from "./commands/toolchains/toolchains";
+import { removeSysroots } from "./commands/toolchains/toolchains";
+import { compressAll } from "./commands/compress";
 
 async function main(cmd: string) {
   switch (cmd) {
@@ -23,9 +24,12 @@ async function main(cmd: string) {
       await runPackageActions("clean", "./lib-sources");
       await rm("build/generated-packages", { recursive: true, force: true });
       break;
+    case "compress-all":
+      await compressAll();
+      break;
     case "clean-tools":
       // await rm("toolchains/resources", { recursive: true, force: true });
-      await removeToolchains(config);
+      await removeSysroots(config);
       console.log("🗑️  Tools Deleted");
       break;
     case "help":

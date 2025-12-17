@@ -1,7 +1,7 @@
 import type {
   DockerResource,
   SysrootScaffoldConfig,
-} from "../../types/tool-config";
+} from "../../core/types/tool-config";
 
 export const dockerResources: Record<string, DockerResource> = {
   "linux.x86_64.sysroot": {
@@ -100,9 +100,6 @@ export const sysrootScaffoldConfig: Record<string, SysrootScaffoldConfig> = {
         from: "linux.x86_64/bin",
         to: "bin",
         exclude: LINUX_BINARY_EXCLUSIONS,
-        rename: {
-          "clang-21": "clang",
-        },
       },
       {
         from: "linux.x86_64/lib/clang",
@@ -113,11 +110,16 @@ export const sysrootScaffoldConfig: Record<string, SysrootScaffoldConfig> = {
         to: "",
         substitutions: {
           "lib/x86_64-linux-gnu/libc.so": `/* GNU ld script
-   Use the shared library, but some functions are only in
-   the static library, so try that secondarily.  */
+     Use the shared library, but some functions are only in
+     the static library, so try that secondarily.  */
+  OUTPUT_FORMAT(elf64-x86-64)
+  GROUP ( libc.so.6 libc_nonshared.a  AS_NEEDED ( ld-linux-x86-64.so.2 ) )`,
+          "lib/x86_64-linux-gnu/libm.so": `/* GNU ld script
+*/
 OUTPUT_FORMAT(elf64-x86-64)
-GROUP ( libc.so.6 libc_nonshared.a  AS_NEEDED ( ld-linux-x86-64.so.2 ) )`,
+GROUP ( libm.so.6  AS_NEEDED ( libmvec.so.1 ) )`,
         },
+        exclude: ["include/c++/v1"],
       },
       {
         from: "linux.x86_64/include",
@@ -136,9 +138,6 @@ GROUP ( libc.so.6 libc_nonshared.a  AS_NEEDED ( ld-linux-x86-64.so.2 ) )`,
         from: "linux.aarch64/bin",
         to: "bin",
         exclude: LINUX_BINARY_EXCLUSIONS,
-        rename: {
-          "clang-21": "clang",
-        },
       },
       {
         from: "linux.aarch64/lib/clang",
@@ -147,6 +146,17 @@ GROUP ( libc.so.6 libc_nonshared.a  AS_NEEDED ( ld-linux-x86-64.so.2 ) )`,
       {
         from: "linux.aarch64.sysroot/usr",
         to: "",
+        substitutions: {
+          "lib/aarch64-linux-gnu/libc.so": `/* GNU ld script
+*/
+OUTPUT_FORMAT(elf64-littleaarch64)
+GROUP ( libm.so.6  AS_NEEDED ( libmvec.so.1 ) )`,
+          "lib/aarch64-linux-gnu/libm.so": `/* GNU ld script
+*/
+OUTPUT_FORMAT(elf64-littleaarch64)
+GROUP ( libm.so.6  AS_NEEDED ( libmvec.so.1 ) )`,
+        },
+        exclude: ["include/c++/v1"],
       },
       {
         from: "linux.aarch64/include",

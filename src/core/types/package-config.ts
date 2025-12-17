@@ -1,4 +1,8 @@
+import path from "node:path";
+
 export const OUTPUT_DIR = "../../../build/generated-packages/cpp-packages";
+// export const PACKAGE_DIR = "../../../packages";
+export const PACKAGE_DIR = path.resolve(process.cwd(), "./packages");
 
 export type Cmd = string | string[];
 
@@ -9,10 +13,10 @@ export interface BuildConfig {
 }
 export interface BuildArchitectures {
   readonly type: "architectures";
-  windows_x86_64: BuildConfig;
-  windows_aarch64: BuildConfig;
-  linux_x86_64: BuildConfig;
-  linux_aarch64: BuildConfig;
+  windows_x86_64?: BuildConfig;
+  windows_aarch64?: BuildConfig;
+  linux_x86_64?: BuildConfig;
+  linux_aarch64?: BuildConfig;
 }
 
 export interface HeaderList {

@@ -4,11 +4,11 @@ import { mkdirSync, existsSync } from "node:fs";
 import path, { join } from "node:path";
 import { download } from "codeframe-bridge/network";
 import { moveDir } from "codeframe-bridge/filesystem";
-import type { Resource } from "../types/tool-config";
-import type { CFPackConfig } from "../types/types";
+import type { Resource } from "../core/types/tool-config";
+import type { CFPackConfig } from "../core/types/types";
 import { buildToolchains } from "./toolchains/build-toolchains";
 import { RESOURCE_DIR } from "./toolchains/toolchain-constants";
-import { organiseToolchains } from "./toolchains/toolchains";
+import { organiseSysroots } from "./toolchains/toolchains";
 
 export async function extractedDirName(
   zipPath: string
@@ -116,9 +116,9 @@ export async function setup(config: CFPackConfig) {
   if (!existsSync(RESOURCE_DIR)) mkdirSync(RESOURCE_DIR, { recursive: true });
 
   // await getResources(config.resources);
-  // await buildToolchains(config.toolchains);
+  await buildToolchains(config.dockerResources);
 
-  await organiseToolchains(config);
+  await organiseSysroots(config);
 
   console.log("🎉 Done");
 }

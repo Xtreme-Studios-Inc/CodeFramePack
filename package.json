@@ -8,16 +8,22 @@
     "setup": "bun cf setup",
     "build-all": "bun cf build-all",
     "clean-all": "bun cf clean-all",
-    "clean-tools": "bun cf clean-tools"
+    "clean-tools": "bun cf clean-tools",
+    "compress-all": "bun cf compress-all"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/tar": "^6.1.13"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
+    "@bokuweb/zstd-wasm": "^0.0.27",
     "codeframe-bridge": "^0.1.22",
-    "unzipper": "^0.12.3"
+    "fzstd": "^0.1.1",
+    "tar": "^7.5.2",
+    "unzipper": "^0.12.3",
+    "zstd-codec": "^0.1.5"
   }
 }

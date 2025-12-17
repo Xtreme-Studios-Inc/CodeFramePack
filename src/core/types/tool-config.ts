@@ -1,3 +1,5 @@
+import { platform, arch } from "node:process";
+
 export interface Resource {
   downloadUrl: string;
 }
@@ -46,4 +48,30 @@ export interface ScaffoldRule {
 
 export interface SysrootScaffoldConfig {
   rules: ScaffoldRule[];
+}
+
+export function getCompilerPath() {
+  // 1. Normalize the Architecture name
+  // Node gives us "x64" or "arm64", but your folders use "x86_64" and "aarch64"
+  const currentArch = arch === "x64" ? "x86_64" : "aarch64";
+
+  // 2. Define the Base Path (OS dependent root)
+  let root = "";
+
+  switch (platform) {
+    case "win32":
+      root = "D:/ProgramFiles/CodeFrame/dependencies/cpp/windows";
+      break;
+    case "darwin": // macOS
+      root = "/opt/CodeFrame/dependencies/cpp/macos";
+      break;
+    case "linux":
+    default:
+      root = "/opt/CodeFrame/dependencies/cpp/linux";
+      break;
+  }
+
+  // 3. Construct and return the full path
+  // Result: .../cpp/<os>/<arch>/bin
+  return `${root}/${currentArch}/bin`;
 }

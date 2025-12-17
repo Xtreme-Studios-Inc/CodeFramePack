@@ -13,7 +13,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Sysroot (path to extracted Linux rootfs)
-set(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux24-amd64")
+set(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux.x86_64")
+
+# set(CMAKE_HOST "${CMAKE_CURRENT_LIST_DIR}/../windows.x86_64")
 
 # Make our custom modules discoverable
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
@@ -44,28 +46,27 @@ set(CMAKE_PREFIX_PATH "${CMAKE_SYSROOT}/usr;${CMAKE_SYSROOT}")
 # LLVM/Clang & libc++ locations
 # ------------------------------------------------------------
 
-set(CLANG_VER 20)
+set(CLANG_VER 21)
 set(_triplet "x86_64-linux-gnu")
 
 # libc++ headers (if needed for include checks)
-set(LIBCXX_INCLUDE_DIR "${CMAKE_SYSROOT}/usr/lib/llvm-20/include/c++/v1")
+set(LIBCXX_INCLUDE_DIR "${CMAKE_SYSROOT}/include/c++/v1")
 
 # Clang runtime (builtins, etc.)
-set(CLANG_RT_DIR       "${CMAKE_SYSROOT}/usr/lib/llvm-20/lib/clang/20/lib/linux")
-set(CLANG_RT_BUILTINS  "${CLANG_RT_DIR}/libclang_rt.builtins-x86_64.a")
+set(CLANG_RT_DIR       "${CMAKE_SYSROOT}/lib/clang/21/lib")
+set(CLANG_RT_BUILTINS  "${CLANG_RT_DIR}/libclang_rt.builtins.a")
 
 # libc++/abi/unwind libraries
-set(LIBCXX_DIR         "${CMAKE_SYSROOT}/usr/lib/x86_64-linux-gnu")
+set(LIBCXX_DIR         "${CMAKE_SYSROOT}/lib/x86_64-linux-gnu")
 set(LIBCXX_A           "${LIBCXX_DIR}/libc++.a")
 set(LIBC_A           "${LIBCXX_DIR}/libc.so")
 set(LIBCXXABI_A        "${LIBCXX_DIR}/libc++abi.so")
 set(LIBUNWIND_A        "${LIBCXX_DIR}/libunwind.a")
 set(LIBM               "${LIBCXX_DIR}/libm.so")
-set(BUILTINS_A         "${CMAKE_SYSROOT}/usr/lib/llvm-20/lib/clang/20/lib/linux/libclang_rt.builtins-x86_64.a")
+set(BUILTINS_A         "${CMAKE_SYSROOT}/lib/clang/21/lib/x86_64-unknown-linux-gnu/libclang_rt.builtins.a")
 
 # Additional libc++ library search dirs
-set(LIBCXX_LIB_DIR_1   "${CMAKE_SYSROOT}/usr/lib/${_triplet}")
-set(LIBCXX_LIB_DIR_2   "${CMAKE_SYSROOT}/usr/lib/llvm-20/lib")
+set(LIBCXX_LIB_DIR_1   "${CMAKE_SYSROOT}/lib/${_triplet}")
 
 # ------------------------------------------------------------
 # Linker setup
@@ -78,11 +79,9 @@ set(_linker_setup_flags_list
   -L${LIBCXX_DIR}
   -L${LIBCXX_LIB_DIR_2}
   -L${LIBCXX_LIB_DIR_1}
-  -L${CMAKE_SYSROOT}/usr/lib/${_triplet}
   -L${CMAKE_SYSROOT}/lib/${_triplet}
   -L${CLANG_RT_DIR}
   -Wl,-rpath-link,${LIBCXX_DIR}
-  -Wl,-rpath-link,${CMAKE_SYSROOT}/usr/lib/${_triplet}
   -Wl,-rpath-link,${CMAKE_SYSROOT}/lib/${_triplet}
 )
 string(JOIN " " _LINKER_SETUP_FLAGS ${_linker_setup_flags_list})
@@ -116,7 +115,7 @@ set(ENV{PKG_CONFIG_SYSROOT_DIR} "${CMAKE_SYSROOT}")
 
 # Use forward slashes; ';' is list separator on Windows
 set(ENV{PKG_CONFIG_LIBDIR}
-  "${CMAKE_SYSROOT}/usr/lib/${_triplet}/pkgconfig;${CMAKE_SYSROOT}/usr/lib/pkgconfig;${CMAKE_SYSROOT}/usr/share/pkgconfig"
+  "${CMAKE_SYSROOT}/lib/${_triplet}/pkgconfig;${CMAKE_SYSROOT}/lib/pkgconfig;${CMAKE_SYSROOT}/usr/share/pkgconfig"
 )
 
 # ------------------------------------------------------------
@@ -124,18 +123,19 @@ set(ENV{PKG_CONFIG_LIBDIR}
 # ------------------------------------------------------------
 
 set(_gtk_includes
-  "-isystem ${CMAKE_SYSROOT}/usr/include/gtk-3.0"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/glib-2.0"
-  "-isystem ${CMAKE_SYSROOT}/usr/lib/${_triplet}/glib-2.0/include"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/cairo"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/pango-1.0"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/gdk-pixbuf-2.0"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/atk-1.0"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/at-spi-2.0"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/at-spi2-atk/2.0"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/webkitgtk-4.1"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/harfbuzz"
-  "-isystem ${CMAKE_SYSROOT}/usr/include/libsoup-3.0"
+  "-isystem ${CMAKE_SYSROOT}/include/${_triplet}"
+  "-isystem ${CMAKE_SYSROOT}/include/gtk-3.0"
+  "-isystem ${CMAKE_SYSROOT}/include/glib-2.0"
+  "-isystem ${CMAKE_SYSROOT}/lib/${_triplet}/glib-2.0/include"
+  "-isystem ${CMAKE_SYSROOT}/include/cairo"
+  "-isystem ${CMAKE_SYSROOT}/include/pango-1.0"
+  "-isystem ${CMAKE_SYSROOT}/include/gdk-pixbuf-2.0"
+  "-isystem ${CMAKE_SYSROOT}/include/atk-1.0"
+  "-isystem ${CMAKE_SYSROOT}/include/at-spi-2.0"
+  "-isystem ${CMAKE_SYSROOT}/include/at-spi2-atk/2.0"
+  "-isystem ${CMAKE_SYSROOT}/include/webkitgtk-4.1"
+  "-isystem ${CMAKE_SYSROOT}/include/harfbuzz"
+  "-isystem ${CMAKE_SYSROOT}/include/libsoup-3.0"
 )
 
 string(JOIN " " _gtk_includes_str ${_gtk_includes})

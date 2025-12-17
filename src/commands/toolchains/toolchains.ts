@@ -1,13 +1,24 @@
-import type { CFPackConfig } from "../../types/types";
+import type { CFPackConfig } from "../../core/types/types";
 
 import path, { resolve } from "node:path";
-import { mkdir, rm, exists, cp } from "node:fs/promises";
+import {
+  mkdir,
+  rm,
+  exists,
+  cp,
+  symlink,
+  unlink,
+  readlink,
+  lstat,
+  chmod,
+} from "node:fs/promises";
 import { BUILD_DIR, RESOURCE_DIR, TOOLCHAIN_DIR } from "./toolchain-constants";
-import type { SysrootScaffoldConfig } from "../../types/tool-config";
+import type { SysrootScaffoldConfig } from "../../core/types/tool-config";
 
 async function outputDependencies(
   scafoldConfigs: Record<string, SysrootScaffoldConfig>
 ) {
+  const depsDir = resolve(BUILD_DIR, "dependencies");
   const outDir = resolve(BUILD_DIR, "dependencies/cpp");
   if (!exists(outDir)) await mkdir(outDir);
 
@@ -44,10 +55,27 @@ async function outputDependencies(
 
   await Promise.all(copyOperations);
   console.log("Dependencies Copied Successfully too: " + outDir);
+
+  // 3. SPAWN TAR COMMAND
+  console.log("🗜️ Compressing to cpp.tar.gz...");
+
+  const proc = Bun.spawn(["tar", "-czf", "cpp.tar.gz", "cpp"], {
+    cwd: depsDir,
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+
+  const exitCode = await proc.exited;
+
+  if (exitCode === 0) {
+    console.log("✅ Compression Complete: dependencies/cpp.tar.gz");
+  } else {
+    console.error("❌ Compression Failed with code:", exitCode);
+  }
 }
 
-export async function organiseToolchains(config: CFPackConfig) {
-  await removeToolchains(config);
+export async function organiseSysroots(config: CFPackConfig) {
+  await removeSysroots(config);
   const scafoldConfigs = config.sysrootScaffoldConfig;
 
   for (const [key, scafold] of Object.entries(scafoldConfigs)) {
@@ -58,34 +86,42 @@ export async function organiseToolchains(config: CFPackConfig) {
 
     console.log(key);
     for (const rule of scafold.rules) {
-      // 1. Resolve Root Paths
       const sourceRoot = resolve(RESOURCE_DIR, rule.from);
       const destRoot = resolve(scafoldedToolchainDir, rule.to);
 
-      // 2. Determine Scan Scope
-      // If specific includes are given, we only scan those. Otherwise, we scan everything.
+      // Determine Scan Scope
       const patternsToScan = rule.include?.length ? rule.include : ["**/*"];
 
       for (const pattern of patternsToScan) {
         const glob = new Bun.Glob(pattern);
 
         // Scan for files (asynchronous iterator)
-        for await (const file of glob.scan({
+        for await (const item of glob.scan({
           cwd: sourceRoot,
-          onlyFiles: true,
+          onlyFiles: false,
         })) {
-          // 3. Check Excludes (Priority: Exclude overrides Include)
-          // We create a temp Glob to check if this specific file matches any exclude pattern
+          // Perform the Copy
+          const sourcePath = resolve(sourceRoot, item);
+          // Check Source Stats (Use lstat to NOT follow symlinks)
+          const stats = await lstat(sourcePath);
+
+          if (stats.isDirectory()) continue;
+
+          // Normalize the path to forward slashes
+          const normalizedFile = item.replace(/\\/g, "/");
+
+          // Check Excludes using the normalized path
           if (
             rule.exclude?.some((excludePattern) =>
-              new Bun.Glob(excludePattern).match(file)
+              new Bun.Glob(excludePattern).match(normalizedFile)
             )
           ) {
+            // console.log(`❌ Excluding: ${normalizedFile}`);
             continue;
           }
 
-          // 4. Resolve Destination Path
-          const originalFilename = path.basename(file);
+          // Resolve Destination Path
+          const originalFilename = path.basename(item);
           const parsed = path.parse(originalFilename); // { name: "clang-21", ext: ".exe", base: "clang-21.exe" }
 
           let targetFilename = originalFilename;
@@ -102,40 +138,56 @@ export async function organiseToolchains(config: CFPackConfig) {
             }
           }
 
-          // const destPath = rule.flatten
-          //   ? resolve(destRoot, targetFilename)
-          //   : resolve(destRoot, path.dirname(file), targetFilename);
-
           // Calculate the specific sub-path relative to destRoot
-          // (e.g., "lib/x86_64-linux-gnu/libc.so")
           const relativeDestPath = rule.flatten
             ? targetFilename
-            : path.join(path.dirname(file), targetFilename);
+            : path.join(path.dirname(item), targetFilename);
 
           const destPath = resolve(destRoot, relativeDestPath);
-
-          // 5. Perform the Copy
-          const sourcePath = resolve(sourceRoot, file);
 
           // Ensure the specific destination folder exists
           await mkdir(path.dirname(destPath), { recursive: true });
 
-          // // Use Bun's native high-performance file writer
-          // await Bun.write(destPath, Bun.file(sourcePath));
+          // 3. Handle Symlinks vs Regular Files
+          if (stats.isSymbolicLink()) {
+            console.log(`🔗 Linking: ${originalFilename}`);
 
-          // --- SUBSTITUTION LOGIC START ---
+            // 1. Read the existing target
+            let linkTarget = await readlink(sourcePath);
 
-          // Normalize slashes to forward slashes for consistent Key lookup
-          // (Windows uses backslashes, but your config keys use forward slashes)
-          const substitutionKey = relativeDestPath.replace(/\\/g, "/");
+            // If the target is an absolute path, make it relative
+            if (path.isAbsolute(linkTarget)) {
+              linkTarget = path.relative(path.dirname(sourcePath), linkTarget);
+            }
 
-          if (rule.substitutions && rule.substitutions[substitutionKey]) {
-            // Case A: Write the substituted content (fix for libc.so)
-            // We write the string directly instead of copying the file
-            await Bun.write(destPath, rule.substitutions[substitutionKey]);
+            // Enforce Forward Slashes (Linux Compatibility)
+            // Windows might give you "..\lib\foo", Linux needs "../lib/foo"
+            linkTarget = linkTarget.replace(/\\/g, "/");
+
+            // Clean up destination
+            try {
+              await unlink(destPath);
+            } catch {}
+
+            // 4. Create the cleaned-up link
+            await symlink(linkTarget, destPath, "file");
           } else {
-            // Case B: Standard File Copy
-            await Bun.write(destPath, Bun.file(sourcePath));
+            // --- SUBSTITUTION LOGIC ---
+            const substitutionKey = relativeDestPath.replace(/\\/g, "/");
+
+            if (rule.substitutions && rule.substitutions[substitutionKey]) {
+              await Bun.write(destPath, rule.substitutions[substitutionKey]);
+            } else {
+              // Standard File Copy
+              await Bun.write(destPath, Bun.file(sourcePath));
+
+              // Optional: Preserve executable permissions for binaries
+              // (Bun.write/copyFile doesn't always preserve chmod perfectly across OS)
+              if (stats.mode & 0o111) {
+                // It's executable, ensure destination is too
+                await chmod(destPath, stats.mode);
+              }
+            }
           }
         }
       }
@@ -145,7 +197,7 @@ export async function organiseToolchains(config: CFPackConfig) {
   await outputDependencies(config.sysrootScaffoldConfig);
 }
 
-export async function removeToolchains(config: CFPackConfig) {
+export async function removeSysroots(config: CFPackConfig) {
   const scafoldConfigs = config.sysrootScaffoldConfig;
 
   for (const [key, scafold] of Object.entries(scafoldConfigs)) {

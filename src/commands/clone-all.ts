@@ -1,7 +1,7 @@
 import { spawn } from "child_process";
 import { promises as fs } from "fs";
 import * as path from "path";
-import type { Repositories } from "../types/package-config";
+import type { Repositories } from "../core/types/package-config";
 
 // Target Directory where repositories would be cloned to.
 const LIB_SOURCES_DIR = path.resolve(process.cwd(), "./lib-sources");
