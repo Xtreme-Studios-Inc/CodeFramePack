@@ -1,7 +1,9 @@
 import path from "node:path";
 
-export const OUTPUT_DIR = "../../../build/generated-packages/cpp-packages";
-// export const PACKAGE_DIR = "../../../packages";
+export const PACKAGE_OUTPUT_DIR = path.resolve(
+  process.cwd(),
+  "./build/generated-packages"
+);
 export const PACKAGE_DIR = path.resolve(process.cwd(), "./packages");
 
 export type Cmd = string | string[];

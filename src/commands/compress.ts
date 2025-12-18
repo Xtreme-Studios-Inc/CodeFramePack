@@ -1,5 +1,5 @@
 import { readdirSync } from "node:fs";
-import { PACKAGE_DIR } from "../core/types/package-config";
+import { PACKAGE_DIR } from "../core/types/package.types";
 import { run } from "../core/util";
 
 import { mkdirSync } from "fs";

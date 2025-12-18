@@ -1,7 +1,7 @@
 import type {
   DockerResource,
   SysrootScaffoldConfig,
-} from "../../core/types/tool-config";
+} from "../../core/types/tool.types";
 
 export const dockerResources: Record<string, DockerResource> = {
   "linux.x86_64.sysroot": {

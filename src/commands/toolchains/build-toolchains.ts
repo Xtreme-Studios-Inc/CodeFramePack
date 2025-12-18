@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 
-import type { DockerResource } from "../../core/types/tool-config";
+import type { DockerResource } from "../../core/types/tool.types";
 import path from "node:path";
 import { mkdir, readdir, rename, rm } from "node:fs/promises";
 import { RESOURCE_DIR } from "./toolchain-constants";

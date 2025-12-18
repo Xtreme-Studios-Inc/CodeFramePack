@@ -1,4 +1,4 @@
-import type { Resource } from "../../core/types/tool-config";
+import type { Resource } from "../../core/types/tool.types";
 
 export const resources: Record<string, Resource> = {
   "windows.x86_64": {

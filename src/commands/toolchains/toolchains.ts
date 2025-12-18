@@ -1,4 +1,4 @@
-import type { CFPackConfig } from "../../core/types/types";
+import type { CFPackConfig } from "../../core/types";
 
 import path, { resolve } from "node:path";
 import {
@@ -13,7 +13,7 @@ import {
   chmod,
 } from "node:fs/promises";
 import { BUILD_DIR, RESOURCE_DIR, TOOLCHAIN_DIR } from "./toolchain-constants";
-import type { SysrootScaffoldConfig } from "../../core/types/tool-config";
+import type { SysrootScaffoldConfig } from "../../core/types/tool.types";
 
 async function outputDependencies(
   scafoldConfigs: Record<string, SysrootScaffoldConfig>

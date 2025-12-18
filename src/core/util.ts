@@ -1,6 +1,6 @@
 import { spawn } from "bun";
 import { platform } from "process";
-import type { Cmd } from "./types/package-config";
+import type { Cmd } from "./types/package.types";
 import { BOLD, DARK_GREEN, RESET } from "./types/theme";
 
 function toSpawnCmd(cmd: Cmd): string[] {
@@ -17,9 +17,6 @@ export async function run(
   opts: { cwd?: string } = {}
 ) {
   if (label) console.log(`${BOLD}${DARK_GREEN} ${label}${RESET}`);
-  //   console.log("Command: ");
-  //   console.log(cmd);
-  //   console.log("- Started -");
 
   try {
     const p = spawn({

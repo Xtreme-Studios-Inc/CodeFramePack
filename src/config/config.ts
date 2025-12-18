@@ -1,4 +1,4 @@
-import type { CFPackConfig } from "../core/types/types";
+import type { CFPackConfig } from "../core/types";
 import {
   dockerResources,
   sysrootScaffoldConfig,

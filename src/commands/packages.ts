@@ -10,13 +10,12 @@ import {
 import { basename, dirname, join, resolve } from "path";
 import { pathToFileURL } from "url";
 
-import { type BuildType, type Cmd } from "../core/types/package-config";
+import { type BuildType, type Cmd } from "../core/types/package.types";
 import { BOLD, GREEN, MAGENTA, RESET } from "../core/types/theme";
 import { run } from "../core/util";
 
 let CWD: string;
 
-// Explicit Order, fully typed:
 const buildOrder = [
   "windows_x86_64",
   "windows_aarch64",
