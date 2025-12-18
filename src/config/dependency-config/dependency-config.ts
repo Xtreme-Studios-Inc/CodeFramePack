@@ -110,14 +110,14 @@ export const sysrootScaffoldConfig: Record<string, SysrootScaffoldConfig> = {
         to: "",
         substitutions: {
           "lib/x86_64-linux-gnu/libc.so": `/* GNU ld script
-     Use the shared library, but some functions are only in
-     the static library, so try that secondarily.  */
-  OUTPUT_FORMAT(elf64-x86-64)
-  GROUP ( libc.so.6 libc_nonshared.a  AS_NEEDED ( ld-linux-x86-64.so.2 ) )`,
+       Use the shared library, but some functions are only in
+       the static library, so try that secondarily.  */
+    OUTPUT_FORMAT(elf64-x86-64)
+    GROUP ( libc.so.6 libc_nonshared.a  AS_NEEDED ( ld-linux-x86-64.so.2 ) )`,
           "lib/x86_64-linux-gnu/libm.so": `/* GNU ld script
-*/
-OUTPUT_FORMAT(elf64-x86-64)
-GROUP ( libm.so.6  AS_NEEDED ( libmvec.so.1 ) )`,
+  */
+  OUTPUT_FORMAT(elf64-x86-64)
+  GROUP ( libm.so.6  AS_NEEDED ( libmvec.so.1 ) )`,
         },
         exclude: ["include/c++/v1"],
       },
@@ -147,10 +147,9 @@ GROUP ( libm.so.6  AS_NEEDED ( libmvec.so.1 ) )`,
         from: "linux.aarch64.sysroot/usr",
         to: "",
         substitutions: {
-          "lib/aarch64-linux-gnu/libc.so": `/* GNU ld script
-*/
+          "lib/aarch64-linux-gnu/libc.so": `/* GNU ld script */
 OUTPUT_FORMAT(elf64-littleaarch64)
-GROUP ( libm.so.6  AS_NEEDED ( libmvec.so.1 ) )`,
+GROUP ( libc.so.6 libc_nonshared.a  AS_NEEDED ( ld-linux-aarch64.so.1 ) )`,
           "lib/aarch64-linux-gnu/libm.so": `/* GNU ld script
 */
 OUTPUT_FORMAT(elf64-littleaarch64)

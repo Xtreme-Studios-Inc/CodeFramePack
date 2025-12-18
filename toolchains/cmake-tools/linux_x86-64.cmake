@@ -5,7 +5,7 @@
 # Target platform
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
-# set(CMAKE_CROSSCOMPILING ON)
+set(CMAKE_CROSSCOMPILING ON)
 
 # Language standard
 set(CMAKE_CXX_STANDARD 20)
@@ -13,7 +13,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Sysroot (path to extracted Linux rootfs)
-set(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux.x86_64")
+get_filename_component(_ABS_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux.x86_64" ABSOLUTE)
+set(CMAKE_SYSROOT "${_ABS_SYSROOT}")
 
 # set(CMAKE_HOST "${CMAKE_CURRENT_LIST_DIR}/../windows.x86_64")
 
@@ -109,14 +110,18 @@ set(CMAKE_CXX_STANDARD_LIBRARIES "${_LINKER_CORE_LIBS}")
 # pkg-config for cross builds
 # ------------------------------------------------------------
 
-# Clear default dir and set sysroot for pkg-config
-set(ENV{PKG_CONFIG_DIR} "")
-set(ENV{PKG_CONFIG_SYSROOT_DIR} "${CMAKE_SYSROOT}")
+# # Clear default dir and set sysroot for pkg-config
+# set(ENV{PKG_CONFIG_DIR} "")
+# set(ENV{PKG_CONFIG_SYSROOT_DIR} "${CMAKE_SYSROOT}")
 
-# Use forward slashes; ';' is list separator on Windows
-set(ENV{PKG_CONFIG_LIBDIR}
-  "${CMAKE_SYSROOT}/lib/${_triplet}/pkgconfig;${CMAKE_SYSROOT}/lib/pkgconfig;${CMAKE_SYSROOT}/usr/share/pkgconfig"
-)
+# # Use forward slashes; ';' is list separator on Windows
+# set(ENV{PKG_CONFIG_LIBDIR}
+#   "${CMAKE_SYSROOT}/lib/${_triplet}/pkgconfig;${CMAKE_SYSROOT}/lib/pkgconfig;${CMAKE_SYSROOT}/usr/share/pkgconfig"
+# )
+
+
+# # (Optional: Add common share path if needed)
+# set(ENV{PKG_CONFIG_PATH} "${CMAKE_SYSROOT}/usr/share/pkgconfig")
 
 # ------------------------------------------------------------
 # GTK / WebKit include roots (override/fixups)

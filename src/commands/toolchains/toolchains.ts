@@ -150,7 +150,7 @@ export async function organiseSysroots(config: CFPackConfig) {
 
           // 3. Handle Symlinks vs Regular Files
           if (stats.isSymbolicLink()) {
-            console.log(`🔗 Linking: ${originalFilename}`);
+            // console.log(`🔗 Linking: ${originalFilename}`);
 
             // 1. Read the existing target
             let linkTarget = await readlink(sourcePath);

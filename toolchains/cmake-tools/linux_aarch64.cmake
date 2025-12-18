@@ -13,7 +13,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Path to your extracted Linux rootfs
-set(CMAKE_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux.aarch64")
+get_filename_component(_ABS_SYSROOT "${CMAKE_CURRENT_LIST_DIR}/../linux.aarch64" ABSOLUTE)
+set(CMAKE_SYSROOT "${_ABS_SYSROOT}")
 
 # Make our custom modules discoverable
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
@@ -57,16 +58,16 @@ set(CLANG_RT_BUILTINS  "${CLANG_RT_DIR}/libclang_rt.builtins.a")
 
 # libc++/abi/unwind libraries
 set(LIBCXX_DIR         "${CMAKE_SYSROOT}/lib/aarch64-linux-gnu")
-set(LIBCXX_A           "${LIBCXX_DIR}/libc++.a")
-set(LIBC_A           "${LIBCXX_DIR}/libc.so")
-set(LIBCXXABI_A        "${LIBCXX_DIR}/libc++abi.so")
-set(LIBUNWIND_A        "${LIBCXX_DIR}/libunwind.a")
+set(LIBCXX           "${LIBCXX_DIR}/libc++.a")
+set(LIBC           "${LIBCXX_DIR}/libc.so")
+set(LIBCXXABI        "${LIBCXX_DIR}/libc++abi.so")
+set(LIBUNWIND        "${LIBCXX_DIR}/libunwind.a")
 set(LIBM               "${LIBCXX_DIR}/libm.so")
 set(BUILTINS_A         "${CLANG_RT_DIR}/libclang_rt.builtins.a")
 set(GCC_CRT_DIR "${CMAKE_SYSROOT}/lib/gcc/aarch64-linux-gnu/13")
 
 # Additional libc++ library search dirs
-set(LIBCXX_LIB_DIR_1   "${CMAKE_SYSROOT}/lib/${_triplet}")
+set(TRIPLET_LIB_DIR   "${CMAKE_SYSROOT}/lib/${_triplet}")
 
 # ------------------------------------------------------------
 # Linker setup
@@ -77,11 +78,11 @@ set(_linker_setup_flags_list
   -fuse-ld=lld
   -nodefaultlibs
   -Wl,--dynamic-linker=${LIBCXX_DIR}/ld-linux-aarch64.so.1
+  -L${GCC_CRT_DIR}
   -L${LIBCXX_DIR}
-  -L${LIBCXX_LIB_DIR_1}
+  -L${TRIPLET_LIB_DIR}
   -L${CMAKE_SYSROOT}/lib/${_triplet}
   -L${CLANG_RT_DIR}
-  -L${GCC_CRT_DIR}
   -Wl,-rpath-link,${LIBCXX_DIR}
   -Wl,-rpath-link,${CMAKE_SYSROOT}/lib/${_triplet}
 )
@@ -89,15 +90,17 @@ string(JOIN " " _LINKER_SETUP_FLAGS ${_linker_setup_flags_list})
 
 # --- Linker Core Libraries (aarch64) ---
 set(_linker_core_libs_list
+  # Start a group to handle circular deps between libc++, libc, and builtins
+  -Wl,--start-group
   ${BUILTINS_A}
-  -Wl,--push-state,--whole-archive ${LIBCXX_A} ${LIBC_A} -Wl,--pop-state
-  ${LIBCXXABI_A}
-  ${LIBUNWIND_A}
+  ${LIBCXX}
+  ${LIBCXXABI}
+  ${LIBUNWIND}
   ${LIBM}
+  -lc 
   -lpthread
   -ldl
-  -lm
-  -lc
+  -Wl,--end-group
 )
 string(JOIN " " _LINKER_CORE_LIBS ${_linker_core_libs_list})
 

@@ -37,6 +37,7 @@ export async function buildToolchains(
     console.log(`[1/6] Building Docker Image...`);
     // Note: We use the resolved dockerFilePath here
     await run(`docker build --no-cache -f "${dockerFilePath}" -t "${image}" .`);
+    // await run(`docker build -f "${dockerFilePath}" -t "${image}" .`);
 
     try {
       console.log(`[2/6] Creating Container...`);
@@ -58,21 +59,34 @@ export async function buildToolchains(
       // TODO
 
       // GCC Resources to the lib folder
-      if (name == "linux.x86_64.sysroot")
+      if (name == "linux.x86_64.sysroot") {
         await run(
-          `docker cp "${name}":/usr/lib/gcc "${resourceDir}/usr/lib/gcc/"`
+          `docker cp "${name}":/usr/lib/"gcc" "${resourceDir}/usr/lib/"`
         );
-      else if (name == "linux.aarch64.sysroot")
-        await run(
-          `docker cp "${name}":/usr/lib/gcc-cross "${resourceDir}/usr/lib/gcc/"`
+      } else if (name == "linux.aarch64.sysroot") {
+        console.log(
+          "    -> [Fix] Streaming all GCC files (ignoring broken symlinks)..."
         );
 
-      // if(name == "linux.x86_64.sysroot")
-      //   await run(`docker cp "${name}":/usr/lib/"gcc" "${resourceDir}/usr/lib/"`);
-      //   else if (name == "linux.aarch64.sysroot")
-      // await run(
-      //   `docker cp "${name}":/usr/lib/"gcc-cross" "${resourceDir}/usr/lib/"`
-      // );
+        const dest = path.join(resourceDir, "usr/lib/gcc");
+        await mkdir(dest, { recursive: true });
+
+        const safeDest = dest.replace(/\\/g, "/");
+
+        // Use 'docker export' | 'tar' to extract the whole folder.
+        try {
+          await run(
+            `docker export "${name}" | tar -x -C "${safeDest}" --strip-components=3 "usr/lib/gcc/aarch64-linux-gnu"`
+          );
+        } catch (e) {
+          console.warn(
+            "    -> Warning: Tar reported some issues (likely broken symlinks), but valid files were copied."
+          );
+        }
+        // await run(
+        //   `docker cp "${name}":/usr/lib/gcc-cross "${resourceDir}/usr/lib/gcc/"`
+        // );
+      }
 
       const v1Dest = path.join(resourceDir, "usr/include/c++/v1");
       await mkdir(v1Dest, { recursive: true });

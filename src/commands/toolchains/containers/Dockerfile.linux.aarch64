@@ -44,7 +44,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends wget gnupg ca-c
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       build-essential pkg-config \
+      # --- The Cross Compiler (runs on x86) ---
       gcc-aarch64-linux-gnu g++-aarch64-linux-gnu \
+      # --- The Target Native GCC Libs (for the Sysroot) ---
+      libgcc-13-dev:arm64 \
+      libstdc++-13-dev:arm64 \
       libc6-dev:arm64 \
       lld-21 \
       libclang-rt-21-dev:arm64 \

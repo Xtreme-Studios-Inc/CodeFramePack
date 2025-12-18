@@ -1,9 +1,9 @@
 {
   "dependencyConfig": {
-    "name": "libarchive",
-    "libPath": "external/libarchive",
+    "name": "zstd",
+    "libPath": "external/zstd",
     "linkType": "static",
-    "libs": ["archive", "zstd"]
+    "libs": ["zstd"]
   },
   "libraryOptions": {}
 }

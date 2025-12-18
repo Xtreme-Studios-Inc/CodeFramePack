@@ -17,6 +17,9 @@ export async function run(
   opts: { cwd?: string } = {}
 ) {
   if (label) console.log(`${BOLD}${DARK_GREEN} ${label}${RESET}`);
+  console.log("Command: ");
+  console.log(cmd);
+  console.log("- Started -");
 
   try {
     const p = spawn({
