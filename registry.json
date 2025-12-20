@@ -1,0 +1,1479 @@
+{
+  "libraryStatus": {
+    "zlib": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766138876318,
+        "version": "1.3.1"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766138884153,
+        "version": "1.3.1"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766138891856,
+        "version": "1.3.1"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766138899074,
+        "version": "1.3.1"
+      }
+    },
+    "raylib": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766139355674,
+        "version": "5.5.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766139356858,
+        "version": "5.5.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766139368443,
+        "version": "5.5.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766139380299,
+        "version": "5.5.0"
+      }
+    },
+    "glfw": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766139782525,
+        "version": "3.5.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766139794293,
+        "version": "3.5.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766139814731,
+        "version": "3.5.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766139832378,
+        "version": "3.5.0"
+      }
+    },
+    "sdl": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766140238108,
+        "version": "3.5.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766140387005,
+        "version": "3.5.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766140399186,
+        "version": "3.5.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766140410882,
+        "version": "3.5.0"
+      }
+    },
+    "glslang": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (windows_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766140915904,
+        "version": "16.0.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (windows_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766140918975,
+        "version": "16.0.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766140922252,
+        "version": "16.0.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766140925501,
+        "version": "16.0.0"
+      }
+    },
+    "shaderc": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (windows_x86_64) failed"
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_x86_64) failed"
+        },
+        "timestamp": 1766142940976,
+        "version": "16.0.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_aarch64) failed"
+        },
+        "timestamp": 1766143161547,
+        "version": "16.0.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (linux_x86_64) failed"
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (linux_x86_64) failed"
+        },
+        "timestamp": 1766143358553,
+        "version": "16.0.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (linux_aarch64) failed"
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (linux_aarch64) failed"
+        },
+        "timestamp": 1766143560387,
+        "version": "16.0.0"
+      }
+    },
+    "spirv-cross": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_x86_64) failed"
+        },
+        "timestamp": 1766143964028,
+        "version": "16.0.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_aarch64) failed"
+        },
+        "timestamp": 1766143984185,
+        "version": "16.0.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (linux_x86_64) failed"
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (linux_x86_64) failed"
+        },
+        "timestamp": 1766144003861,
+        "version": "16.0.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (linux_aarch64) failed"
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (linux_aarch64) failed"
+        },
+        "timestamp": 1766144024794,
+        "version": "16.0.0"
+      }
+    },
+    "vulkan": {
+      "universal": {
+        "type": "collection",
+        "install": {
+          "success": true,
+          "code": 0,
+          "error": ""
+        },
+        "timestamp": 1766144396518,
+        "version": "16.0.0"
+      }
+    },
+    "vulkan-loader": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_x86_64) failed"
+        },
+        "timestamp": 1766145108158,
+        "version": "0.0.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_aarch64) failed"
+        },
+        "timestamp": 1766145118919,
+        "version": "0.0.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (linux_x86_64) failed"
+        },
+        "timestamp": 1766145135008,
+        "version": "0.0.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (linux_aarch64) failed"
+        },
+        "timestamp": 1766145149516,
+        "version": "0.0.0"
+      }
+    },
+    "vulkan-validation-layers": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_x86_64) failed"
+        },
+        "timestamp": 1766145682386,
+        "version": "0.0.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_aarch64) failed"
+        },
+        "timestamp": 1766145858702,
+        "version": "0.0.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766145860720,
+        "version": "0.0.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766145862740,
+        "version": "0.0.0"
+      }
+    },
+    "spdlog": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766146148352,
+        "version": "0.17.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766146158400,
+        "version": "0.17.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (linux_x86_64) failed"
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766146167300,
+        "version": "0.17.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (linux_aarch64) failed"
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766146176418,
+        "version": "0.17.0"
+      }
+    },
+    "fmt": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766146492694,
+        "version": "12.0.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766146520980,
+        "version": "12.0.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (linux_x86_64) failed"
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766146550955,
+        "version": "12.0.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (linux_aarch64) failed"
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766146580892,
+        "version": "12.0.0"
+      }
+    },
+    "date": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147216324,
+        "version": "3.0.4"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147225709,
+        "version": "3.0.4"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147232197,
+        "version": "3.0.4"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147238585,
+        "version": "3.0.4"
+      }
+    },
+    "google-test": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147546793,
+        "version": "1.16.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147558717,
+        "version": "1.16.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147570123,
+        "version": "1.16.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147581953,
+        "version": "1.16.0"
+      }
+    },
+    "catch2": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147943177,
+        "version": "3.11.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147958720,
+        "version": "3.11.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147974234,
+        "version": "3.11.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766147989590,
+        "version": "3.11.0"
+      }
+    },
+    "benchmark": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766148371734,
+        "version": "1.9.4"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766148403348,
+        "version": "1.9.4"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766148430367,
+        "version": "1.9.4"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766148456988,
+        "version": "1.9.4"
+      }
+    },
+    "poco": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766206452626,
+        "version": "1.14.2"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766206547663,
+        "version": "1.14.2"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766206560641,
+        "version": "1.14.2"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766206572596,
+        "version": "1.14.2"
+      }
+    },
+    "openssl": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (windows_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766210290347,
+        "version": "4.0.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (windows_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766210290407,
+        "version": "4.0.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766210290452,
+        "version": "4.0.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766210290498,
+        "version": "4.0.0"
+      }
+    },
+    "box2d": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766210971057,
+        "version": "3.2.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766210974838,
+        "version": "3.2.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766210978290,
+        "version": "3.2.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766210982009,
+        "version": "3.2.0"
+      }
+    },
+    "bullet": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766211415413,
+        "version": "3.27"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766211435539,
+        "version": "3.27"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766211457139,
+        "version": "3.27"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766211478442,
+        "version": "3.27"
+      }
+    },
+    "ent": {
+      "universal": {
+        "type": "collection",
+        "install": {
+          "success": true,
+          "code": 0,
+          "error": ""
+        },
+        "timestamp": 1766212359945,
+        "version": "3.15.0"
+      }
+    },
+    "entt": {
+      "universal": {
+        "type": "collection",
+        "install": {
+          "success": true,
+          "code": 0,
+          "error": ""
+        },
+        "timestamp": 1766212421361,
+        "version": "3.15.0"
+      }
+    },
+    "imgui": {
+      "universal": {
+        "type": "collection",
+        "install": {
+          "success": true,
+          "code": 0,
+          "error": ""
+        },
+        "timestamp": 1766225526818,
+        "version": "1.92.4"
+      }
+    },
+    "webview": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766226800938,
+        "version": "0.12.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766226809500,
+        "version": "0.12.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766226834005,
+        "version": "0.12.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766226853201,
+        "version": "0.12.0"
+      }
+    },
+    "joltphysics": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766228309632,
+        "version": "5.4.1"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": false,
+          "error": "✗ Building (windows_aarch64) failed"
+        },
+        "install": {
+          "success": false,
+          "error": "✗ Installing (windows_aarch64) failed"
+        },
+        "timestamp": 1766228313135,
+        "version": "5.4.1"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766228416050,
+        "version": "5.4.1"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": true
+        },
+        "build": {
+          "success": true
+        },
+        "install": {
+          "success": true
+        },
+        "timestamp": 1766228521745,
+        "version": "5.4.1"
+      }
+    },
+    "httplib": {
+      "universal": {
+        "type": "collection",
+        "install": {
+          "success": true,
+          "code": 0,
+          "error": ""
+        },
+        "timestamp": 1766229444948,
+        "version": "0.26.0"
+      }
+    },
+    "crow": {
+      "universal": {
+        "type": "collection",
+        "install": {
+          "success": true,
+          "code": 0,
+          "error": ""
+        },
+        "timestamp": 1766230183487,
+        "version": "1.1.1"
+      }
+    },
+    "curl": {
+      "windows_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (windows_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766231739846,
+        "version": "8.17.0"
+      },
+      "windows_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (windows_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766231742791,
+        "version": "8.17.0"
+      },
+      "linux_x86_64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_x86_64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766231751780,
+        "version": "8.17.0"
+      },
+      "linux_aarch64": {
+        "type": "compilation",
+        "config": {
+          "success": false,
+          "error": "✗ Configuring (linux_aarch64) failed"
+        },
+        "build": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "install": {
+          "success": false,
+          "code": -1,
+          "error": "Skipped due to previous failure"
+        },
+        "timestamp": 1766231756173,
+        "version": "8.17.0"
+      }
+    },
+    "websocketpp": {
+      "universal": {
+        "type": "collection",
+        "install": {
+          "success": true,
+          "code": 0,
+          "error": ""
+        },
+        "timestamp": 1766232345211,
+        "version": "0.8.2"
+      }
+    }
+  }
+}

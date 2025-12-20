@@ -10,9 +10,16 @@ import {
 import { basename, dirname, join, resolve } from "path";
 import { pathToFileURL } from "url";
 
+import { run } from "../core/util";
+import { SKIPPED, type BuildConfiguration, type Result } from "../core/types";
 import { type BuildType, type Cmd } from "../core/types/package.types";
 import { BOLD, GREEN, MAGENTA, RESET } from "../core/types/theme";
-import { run } from "../core/util";
+import { RegistryManager } from "../core/registry/registry-manager";
+import type {
+  CollectionBuildStatus,
+  CompilationBuildStatus,
+} from "../core/types/registry.types";
+import { REGISTRY_PATH } from "../providers/package.provider";
 
 let CWD: string;
 
@@ -23,26 +30,71 @@ const buildOrder = [
   "linux_aarch64",
 ] as const;
 
-export async function build(build: BuildType) {
-  if (build.type === "architectures") {
+export async function build(
+  config: BuildConfiguration,
+  registry: RegistryManager
+) {
+  const { info, build } = config;
+  let dirty = false;
+
+  if (build.type === "compilation") {
     const flatten = (c: Cmd) =>
       typeof c === "string" ? c.replace(/\s+/g, " ").trim() : c;
 
     for (const name of buildOrder) {
-      const cfg = build[name];
+      const config = build[name];
+      if (!config) {
+        console.log("No " + name + " compilation configuration available.");
+        continue;
+      }
 
       console.log(`\n${BOLD}${GREEN}=== ${name} ===${RESET}`);
-      await run(flatten(cfg.configStep), `Configuring (${name})`, {
-        cwd: CWD,
-      });
-      await run(cfg.buildStep, `Building (${name})`, { cwd: CWD });
-      await run(cfg.installStep, `Installing (${name})`, { cwd: CWD });
-      console.log(`✅ Done: ${name}`);
+
+      const configureResult: Result = await run(
+        flatten(config.configStep),
+        `Configuring (${name})`,
+        {
+          cwd: CWD,
+        }
+      );
+
+      let buildResult: Result = SKIPPED;
+      let installResult: Result = SKIPPED;
+
+      if (!configureResult.success) {
+        console.error(configureResult.error);
+      } else {
+        buildResult = await run(config.buildStep, `Building (${name})`, {
+          cwd: CWD,
+        });
+        installResult = await run(config.installStep, `Installing (${name})`, {
+          cwd: CWD,
+        });
+      }
+
+      // ✅ REGISTRY UPDATE: Capture state regardless of success/failure
+      const status: CompilationBuildStatus = {
+        type: "compilation",
+        config: configureResult,
+        build: buildResult,
+        install: installResult,
+        timestamp: Date.now(),
+        version: info.version,
+      };
+
+      registry.updateStatus(info.name, name, status);
+      dirty = true;
+
+      if (installResult.success) {
+        console.log(`✅ Done: ${name}`);
+      }
     }
-  } else if (build.type === "headers") {
+  } else if (build.type === "collection") {
+    let collectionSuccess = true;
+    let errorLog = "";
+
     // ✅ Iterate over each library path
     for (const [installPath, files] of Object.entries(build.libs)) {
-      // Ensure destination directory exists
       const destDir = join(installPath);
       if (!existsSync(destDir)) {
         mkdirSync(join(destDir), { recursive: true });
@@ -52,12 +104,13 @@ export async function build(build: BuildType) {
       // Copy each file
       for (const file of files) {
         const srcPath = resolve(CWD, file);
-        console.log(srcPath);
         const fileName = basename(srcPath);
         const destPath = join(installPath, fileName);
 
         if (!existsSync(srcPath)) {
           console.warn(`⚠️ Source file missing: ${srcPath}`);
+          collectionSuccess = false;
+          errorLog += `Missing: ${srcPath}\n`;
           continue;
         }
 
@@ -66,10 +119,10 @@ export async function build(build: BuildType) {
         try {
           if (st.isDirectory()) {
             // Copy directory (recursive)
-            // Ensure parent exists (cpSync will create children)
-            if (!existsSync(destPath)) mkdirSync(destPath, { recursive: true });
+            if (!existsSync(destPath)) {
+              mkdirSync(destPath, { recursive: true });
+            }
             cpSync(srcPath, destPath, { recursive: true });
-            console.log(`Copied dir ${srcPath} → ${destPath}`);
           } else {
             // Copy single file
             const destParent = dirname(destPath);
@@ -78,14 +131,35 @@ export async function build(build: BuildType) {
               mkdirSync(destParent, { recursive: true });
 
             copyFileSync(srcPath, destPath);
-            console.log(`Copied ${srcPath} → ${destPath}`);
           }
-        } catch (err) {
+        } catch (err: any) {
           console.error(`❌ Copy failed for ${srcPath} → ${destPath}:`, err);
+          collectionSuccess = false;
+          errorLog += `${err.message}\n`;
         }
       }
     }
+
+    // ✅ REGISTRY UPDATE: Save collection status
+    const status: CollectionBuildStatus = {
+      type: "collection",
+      install: {
+        success: collectionSuccess,
+        code: collectionSuccess ? 0 : 1,
+        error: errorLog,
+      },
+      timestamp: Date.now(),
+      version: info.version,
+    };
+
+    // We use "universal" as the target name for collections
+    registry.updateStatus(info.name, "universal", status);
+    dirty = true;
   }
+
+  // ✅ SAVE TO DISK: Only once per library
+  if (dirty) registry.save();
+
   console.log("\n🎉 All builds complete.");
 }
 
@@ -93,14 +167,24 @@ export async function build(build: BuildType) {
 export async function runPackageAction(
   action: string,
   cwd: string = process.cwd(),
-  builds: BuildType
+  builds: BuildConfiguration,
+  registry?: RegistryManager
 ) {
   CWD = cwd;
+
+  const activeRegistry = registry ?? new RegistryManager(REGISTRY_PATH);
+
   if (action == "build") {
-    await build(builds);
+    await build(builds, activeRegistry);
   } else if (action == "clean") {
-    const buildDir = join(cwd, "build");
+    const buildDir = join(cwd, builds.info.outDir);
     await run(`rm -rf ${buildDir}`);
+    // Clean up registry
+    if (activeRegistry.getRegistry().libraryStatus[builds.info.name]) {
+      delete activeRegistry.getRegistry().libraryStatus[builds.info.name];
+      activeRegistry.save();
+      console.log(`Removed ${builds.info.name} from registry.`);
+    }
   } else if (action == "help") {
     console.log(
       `${BOLD}${MAGENTA}build:${RESET} builds the project for all supported architectures \n${BOLD}${MAGENTA}clean:${RESET} deletes the build directory`
@@ -118,8 +202,10 @@ async function getModule(dirPath: string, file: string): Promise<any | null> {
 }
 
 // Multi Actions
-export async function runPackageActions(action: string, baseDir: string) {
+export async function runPackageActions(action: string, libSources: string) {
   let label: string;
+
+  const registry = new RegistryManager();
 
   switch (action) {
     case "build":
@@ -133,42 +219,52 @@ export async function runPackageActions(action: string, baseDir: string) {
       break;
   }
 
-  for (const subDir of readdirSync(baseDir)) {
-    const libDir = join(baseDir, subDir);
-    const lib = await getModule(libDir, "package.ts");
+  for (const subDir of readdirSync(libSources)) {
+    // subDir could be a library or a catagory containing many libraries
+    const dir = join(libSources, subDir);
+    const lib = await getModule(dir, "package.ts");
 
     if (!lib) {
+      const libCategoryDir = dir;
       // 1. Check if 'subDir' is a directory
-      let subStat;
+      let subStatus;
       try {
-        subStat = statSync(libDir);
+        subStatus = statSync(libCategoryDir);
       } catch (e) {
         continue;
       }
 
-      if (!subStat.isDirectory()) continue;
+      if (!subStatus.isDirectory()) continue;
 
-      // Correction: subDir is just the name, we must use the full path (libDir)
-      // for readdirSync to correctly find the contents of the subdirectory.
-      for (const subSubDir of readdirSync(libDir)) {
-        const nestedModDir = join(libDir, subSubDir); // Use libDir, not subDir, to form the path
-        const nestedMod = await getModule(nestedModDir, "package.ts");
+      // Find the contents of the library.
+      for (const libDir of readdirSync(libCategoryDir)) {
+        const categorizedLibDir = join(libCategoryDir, libDir);
+        const nestedMod = await getModule(categorizedLibDir, "package.ts");
 
         if (!nestedMod) continue;
 
-        console.log(
-          `${BOLD}${MAGENTA}${label} ${subDir}/${subSubDir}${RESET}\n`
-        );
+        console.log(`${BOLD}${MAGENTA}${label} ${subDir}/${libDir}${RESET}\n`);
 
-        const build = nestedMod.build?.(nestedModDir);
-        await runPackageAction(action, nestedModDir, build);
+        const build = nestedMod.build?.(categorizedLibDir);
+
+        let buildConfig: BuildConfiguration = {
+          info: nestedMod.info,
+          build,
+        };
+
+        await runPackageAction(
+          action,
+          categorizedLibDir,
+          buildConfig,
+          registry
+        );
       }
       continue;
     }
 
     console.log(`${BOLD}${MAGENTA}${label} ${subDir}${RESET}\n`);
 
-    const build = lib.build?.(libDir);
-    await runPackageAction(action, libDir, build);
+    const build = lib.build?.(dir);
+    await runPackageAction(action, dir, build, registry);
   }
 }

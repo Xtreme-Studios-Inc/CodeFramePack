@@ -1,22 +1,21 @@
 // import { exists } from "node:fs/promises";
-import path, { resolve } from "node:path";
+import path, { dirname, join, resolve } from "node:path";
 import { arch, platform } from "node:process";
+import { fileURLToPath } from "node:url";
 
-export const CMAKE_TOOLS = path.resolve(
-  process.cwd(),
-  "../../../toolchains/cmake-tools"
-);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-export const CPP_OUTPUT_DIR = path.resolve(
-  process.cwd(),
-  "../../../build/generated-packages/cpp"
-);
-export const C_OUTPUT_DIR = path.resolve(
-  process.cwd(),
-  "../../../build/generated-packages/c"
-);
+export const REPO_ROOT = resolve(__dirname, "../../");
+export const REGISTRY_PATH = join(REPO_ROOT, "registry.json");
+export const PACKAGE_DIR = resolve(REPO_ROOT, "./packages");
+export const CMAKE_TOOLS = resolve(REPO_ROOT, "toolchains/cmake-tools");
 
-export const PACKAGE_DIR = path.resolve(process.cwd(), "./packages");
+export const CPP_OUTPUT_DIR = resolve(
+  REPO_ROOT,
+  "build/generated-packages/cpp"
+);
+export const C_OUTPUT_DIR = resolve(REPO_ROOT, "build/generated-packages/c");
 
 export * from "../core/types/package.types";
 export * from "../commands/packages";
@@ -24,11 +23,7 @@ export * from "../commands/packages";
 export function getSysrootPath(currentPlatform: string, arch: string) {
   const folderName: string = `${currentPlatform}.${arch}`;
 
-  const path: string = resolve(
-    process.cwd(),
-    "../../../toolchains/",
-    folderName
-  );
+  const path: string = resolve(REPO_ROOT, "toolchains/", folderName);
 
   return path;
 }
@@ -59,11 +54,7 @@ export function getHostSysrootPath() {
 
   const folderName: string = `${currentPlatform}.${currentArch}`;
 
-  const path: string = resolve(
-    process.cwd(),
-    "../../../toolchains/",
-    folderName
-  );
+  const path: string = resolve(REPO_ROOT, "toolchains/", folderName);
   // console.log(path);
   // const sysrootOK = Promise.resolve(exists(path));
 

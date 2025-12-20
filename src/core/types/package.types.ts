@@ -13,20 +13,30 @@ export interface BuildConfig {
   buildStep: Cmd;
   installStep: Cmd;
 }
-export interface BuildArchitectures {
-  readonly type: "architectures";
+export interface CompilationBuild {
+  readonly type: "compilation";
   windows_x86_64?: BuildConfig;
   windows_aarch64?: BuildConfig;
   linux_x86_64?: BuildConfig;
   linux_aarch64?: BuildConfig;
 }
 
-export interface HeaderList {
-  readonly type: "headers";
+export interface FileCollectionBuild {
+  readonly type: "collection";
   libs: Record<string, string[]>;
 }
 
-export type BuildType = BuildArchitectures | HeaderList;
+export interface LibraryInfo {
+  name: string;
+  version: string;
+  outDir: string;
+}
+export type BuildType = CompilationBuild | FileCollectionBuild;
+
+export interface BuildConfiguration {
+  info: LibraryInfo;
+  build: BuildType;
+}
 
 // Library Types
 export interface LibGroups {
